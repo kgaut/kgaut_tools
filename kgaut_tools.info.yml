@@ -1,0 +1,7 @@
+name: Kgaut Tools
+type: module
+description: Tools and services for drupal 8
+core: 8.x
+package: Kgaut Tools
+dependencies:
+  - pathauto

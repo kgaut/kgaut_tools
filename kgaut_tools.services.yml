@@ -1,0 +1,5 @@
+services:
+  kgaut_tools.stringcleaner:
+    class: Drupal\kgaut_tools\StringCleaner
+    arguments: ['@transliteration', '@pathauto.alias_cleaner']
+

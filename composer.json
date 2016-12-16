@@ -1,0 +1,14 @@
+{
+  "name": "drupal/kgaut_tools",
+  "type": "drupal-module",
+  "description": "Tools and services for drupal 8",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/kgaut_tools",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/kgaut_tools",
+    "source": "http://cgit.drupalcode.org/kgaut_tools"
+  },
+  "require": { }
+}
