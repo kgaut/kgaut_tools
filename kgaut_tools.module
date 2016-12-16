@@ -29,7 +29,7 @@ function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {
  * Generate all image styles once an Image is uploaded.
  * @see http://flocondetoile.fr/blog/generer-des-styles-d-images-automatiquement-avec-drupal-8
  */
-function MYMODULE_entity_insert(EntityInterface $entity) {
+function kgaut_tools_entity_insert(EntityInterface $entity) {
   /** @var \Drupal\file\Entity\File $entity */
   if ($entity instanceof FileInterface) {
     $image = \Drupal::service('image.factory')->get($entity->getFileUri());
