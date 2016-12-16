@@ -1,5 +1,5 @@
 {
-  "name": "drupal/kgaut_tools",
+  "name": "kgaut/kgaut_tools",
   "type": "drupal-module",
   "description": "Tools and services for drupal 8",
   "keywords": ["Drupal"],
