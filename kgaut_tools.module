@@ -28,6 +28,7 @@ function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_entity_insert().
  * Generate all image styles once an Image is uploaded.
+ * Tip by flocondetoile
  * @see http://flocondetoile.fr/blog/generer-des-styles-d-images-automatiquement-avec-drupal-8
  */
 function kgaut_tools_entity_insert(EntityInterface $entity) {
