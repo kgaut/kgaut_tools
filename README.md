@@ -1,6 +1,6 @@
 # Toolbox module for Drupal 8
 
-Currently provide two features.
+Currently provide three features.
 
 ## CleanString Service
 Transliterate and remove special char from a string.
