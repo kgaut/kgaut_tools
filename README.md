@@ -15,7 +15,7 @@ $cleanStringWithoutDash = \Drupal::service('kgaut_tools.stringcleaner')->clean($
 ## Create image derivates during upload
 Inspired by @flocondetoile's post : http://flocondetoile.fr/blog/generate-programmatically-image-styles-drupal-8
 
-## Add new usefull var to all templates : 
+## Add new useful var to all templates : 
 
   - basepath : Drupal basepath() value (not always available)
   - pathtotheme : path to active theme
