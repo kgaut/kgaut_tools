@@ -8,6 +8,7 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
  * Implements hook_help().
@@ -27,8 +28,10 @@ function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {
 
 /**
  * Implements hook_entity_insert().
+ *
  * Generate all image styles once an Image is uploaded.
- * Tip by flocondetoile
+ * Tip by flocondetoile.
+ *
  * @see http://flocondetoile.fr/blog/generer-des-styles-d-images-automatiquement-avec-drupal-8
  */
 function kgaut_tools_entity_insert(EntityInterface $entity) {
@@ -46,4 +49,15 @@ function kgaut_tools_entity_insert(EntityInterface $entity) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_preprocess().
+ *
+ * Add custom variable to all templates.
+ */
+function kgaut_tools_preprocess(&$variables, $hook) {
+  $variables['basepath'] = base_path();
+  $variables['pathtotheme'] = base_path() . drupal_get_path('theme', 'funbreak_front');
+  $variables['pathtotfiles'] = PublicStream::basePath();
 }
