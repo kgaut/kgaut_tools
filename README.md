@@ -6,6 +6,8 @@ Currently provide two features.
 Transliterate and remove special char from a string.
 ```php
 $mystring = "Hello World";
-$cleanString = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->name); //'hello-world
-$cleanStringWithoutDash = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->name,true); //'hello_world
+// 'hello-world'
+$cleanString = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->name); 
+//'hello_world'
+$cleanStringWithoutDash = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->name,true); 
 ```
