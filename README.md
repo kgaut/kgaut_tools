@@ -12,7 +12,7 @@ $cleanString = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->
 $cleanStringWithoutDash = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->name,true); 
 ```
 
-## Create image derivate during upload
+## Create image derivates during upload
 Inspired by @flocondetoile's post : http://flocondetoile.fr/blog/generate-programmatically-image-styles-drupal-8
 
 ## Add new usefull var to all templates : 
