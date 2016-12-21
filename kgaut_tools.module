@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\file\FileInterface;
 
 /**
  * Implements hook_help().
