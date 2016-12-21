@@ -59,6 +59,6 @@ function kgaut_tools_entity_insert(EntityInterface $entity) {
  */
 function kgaut_tools_preprocess(&$variables, $hook) {
   $variables['basepath'] = base_path();
-  $variables['pathtotheme'] = base_path() . drupal_get_path('theme', 'funbreak_front');
+  $variables['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
   $variables['pathtotfiles'] = PublicStream::basePath();
 }
