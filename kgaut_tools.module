@@ -35,22 +35,22 @@ function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {
  *
  * @see http://flocondetoile.fr/blog/generer-des-styles-d-images-automatiquement-avec-drupal-8
  */
-//function kgaut_tools_entity_insert(EntityInterface $entity) {
-//  /** @var \Drupal\file\Entity\File $entity */
-//  if ($entity instanceof FileInterface) {
-//    $image = \Drupal::service('image.factory')->get($entity->getFileUri());
-//    /** @var \Drupal\Core\Image\Image $image */
-//    if ($image->isValid()) {
-//      $styles = ImageStyle::loadMultiple();
-//      $image_uri = $entity->getFileUri();
-//      /** @var \Drupal\image\Entity\ImageStyle $style */
-//      foreach ($styles as $style) {
-//        $destination = $style->buildUri($image_uri);
-//        $style->createDerivative($image_uri, $destination);
-//      }
-//    }
-//  }
-//}
+function kgaut_tools_entity_insert(EntityInterface $entity) {
+  /** @var \Drupal\file\Entity\File $entity */
+  if ($entity instanceof FileInterface) {
+    $image = \Drupal::service('image.factory')->get($entity->getFileUri());
+    /** @var \Drupal\Core\Image\Image $image */
+    if ($image->isValid()) {
+      $styles = ImageStyle::loadMultiple();
+      $image_uri = $entity->getFileUri();
+      /** @var \Drupal\image\Entity\ImageStyle $style */
+      foreach ($styles as $style) {
+        $destination = $style->buildUri($image_uri);
+        $style->createDerivative($image_uri, $destination);
+      }
+    }
+  }
+}
 
 /**
  * Implements hook_preprocess().
