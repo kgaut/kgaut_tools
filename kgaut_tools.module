@@ -62,3 +62,14 @@ function kgaut_tools_preprocess(&$variables, $hook) {
   $variables['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
   $variables['pathtotfiles'] = PublicStream::basePath();
 }
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Add custom variable to all templates.
+ */
+function kgaut_tools_page_attachments(array &$attachments) {
+  $attachments['#attached']['drupalSettings']['basepath'] = base_path();
+  $attachments['#attached']['drupalSettings']['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
+  $attachments['#attached']['drupalSettings']['pathtotfiles'] = PublicStream::basePath();
+}
