@@ -73,3 +73,15 @@ function kgaut_tools_page_attachments(array &$attachments) {
   $attachments['#attached']['drupalSettings']['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
   $attachments['#attached']['drupalSettings']['pathtotfiles'] = PublicStream::basePath();
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * Add custom variables to DrupalSettings.
+ */
+function kgaut_tools_theme_suggestions_user(array $variables) {
+  $suggestions = [];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
+  return $suggestions;
+}

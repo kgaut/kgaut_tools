@@ -31,3 +31,7 @@ Inspired by @flocondetoile's post : http://flocondetoile.fr/blog/generate-progra
   - basepath : Drupal basepath() value (not always available)
   - pathtotheme : path to active theme
   - pathtotfiles : path to public files directory
+
+### User templates suggestions :
+
+Add templates suggestions for user entity based on the view mode ie : user--compact.html.twig
