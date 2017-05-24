@@ -103,4 +103,3 @@ function kgaut_tools_theme_suggestions_page(array $variables) {
   }
   return $suggestions;
 }
-
