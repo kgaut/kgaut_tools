@@ -89,3 +89,18 @@ function kgaut_tools_theme_suggestions_user(array $variables) {
   $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
   return $suggestions;
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * Add view mode to page based on view bundle.
+ */
+function kgaut_tools_theme_suggestions_page(array $variables) {
+  $suggestions = [];
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.node.canonical') {
+    $bundle = \Drupal::routeMatch()->getParameter('node')->bundle();
+    $suggestions[] = $variables['theme_hook_original'] . '__node__' . $bundle;
+  }
+  return $suggestions;
+}
+
