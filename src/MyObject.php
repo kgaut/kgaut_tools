@@ -3,21 +3,21 @@
 namespace Drupal\kgaut_tools;
 
 abstract class MyObject {
-  protected static $db_table_name;
-  protected static $db_table_identifier;
-  protected static $default_data = array();
+  protected static $dbTableName;
+  protected static $dbTableIdentifier;
+  protected static $defaultData = [];
 
   public function __construct($dataObject = NULL) {
     global $user;
     if (is_array($dataObject)) {
       $dataObject = (object) $dataObject;
     }
-    if (isset($dataObject->{static::$db_table_identifier}) && is_numeric($dataObject->{static::$db_table_identifier}) && count((array) $dataObject) == 1) {
-      $this->{static::$db_table_identifier} = $dataObject->{static::$db_table_identifier};
+    if (isset($dataObject->{static::$dbTableIdentifier}) && is_numeric($dataObject->{static::$dbTableIdentifier}) && count((array) $dataObject) == 1) {
+      $this->{static::$dbTableIdentifier} = $dataObject->{static::$dbTableIdentifier};
       $this->load();
     }
-    elseif (isset($dataObject->{static::$db_table_identifier}) && is_numeric($dataObject->{static::$db_table_identifier}) && count((array) $dataObject) > 1) {
-      $this->{static::$db_table_identifier} = $dataObject->{static::$db_table_identifier};
+    elseif (isset($dataObject->{static::$dbTableIdentifier}) && is_numeric($dataObject->{static::$dbTableIdentifier}) && count((array) $dataObject) > 1) {
+      $this->{static::$dbTableIdentifier} = $dataObject->{static::$dbTableIdentifier};
       $this->load();
       foreach ($this as $key => &$value) {
         if (isset($dataObject->{$key}) && $dataObject->{$key} != $value) {
@@ -33,8 +33,8 @@ abstract class MyObject {
           continue;
         }
         //puis avec les datas par default de la classe
-        if (isset(static::$default_data[$key])) {
-          $val = static::$default_data[$key];
+        if (isset(static::$defaultData[$key])) {
+          $val = static::$defaultData[$key];
           continue;
         }
         //puis enfin avec des valeurs de bases standards
@@ -68,7 +68,7 @@ abstract class MyObject {
   public function save() {
     $unsaved_attributes = array();
     $this->presave($unsaved_attributes);
-    if (isset($this->{static::$db_table_identifier}) && is_numeric($this->{static::$db_table_identifier})) {
+    if (isset($this->{static::$dbTableIdentifier}) && is_numeric($this->{static::$dbTableIdentifier})) {
       $res = $this->update();
     }
     else {
@@ -78,7 +78,7 @@ abstract class MyObject {
     return $res;
   }
   public function getId() {
-    return $this->{static::$db_table_identifier};
+    return $this->{static::$dbTableIdentifier};
   }
   /**
    * Cette fonction remets les attributs qui ne doivent pas être enregistrés
@@ -97,16 +97,16 @@ abstract class MyObject {
     if (isset($this->stage) && is_object($this->stage)) {
       $this->stage = json_encode($this->stage);
     }
-    $q = db_insert(static::$db_table_name);
+    $q = db_insert(static::$dbTableName);
     $q->fields(get_object_vars($this));
-    $this->{static::$db_table_identifier} = $q->execute();
+    $this->{static::$dbTableIdentifier} = $q->execute();
     if (isset($this->data) && is_string($this->data)) {
       $this->data = json_decode($this->data);
     }
-    return is_numeric($this->{static::$db_table_identifier}) && $this->{static::$db_table_identifier} > 0;
+    return is_numeric($this->{static::$dbTableIdentifier}) && $this->{static::$dbTableIdentifier} > 0;
   }
   private function update() {
-    $q = db_update(static::$db_table_name);
+    $q = db_update(static::$dbTableName);
     if (isset($this->data) && is_object($this->data)) {
       $this->data = json_encode($this->data);
     }
@@ -115,20 +115,20 @@ abstract class MyObject {
     }
     $fields = get_object_vars($this);
     //on jarte la clé primaire
-    if (isset($fields[static::$db_table_identifier])) {
-      unset($fields[static::$db_table_identifier]);
+    if (isset($fields[static::$dbTableIdentifier])) {
+      unset($fields[static::$dbTableIdentifier]);
     }
     $q->fields($fields);
-    $q->condition(static::$db_table_identifier, $this->{static::$db_table_identifier}, '=');
+    $q->condition(static::$dbTableIdentifier, $this->{static::$dbTableIdentifier}, '=');
     if (isset($this->data) && is_string($this->data)) {
       $this->data = json_decode($this->data);
     }
     return $q->execute();
   }
   protected function load() {
-    $query = db_select(static::$db_table_name, 't');
+    $query = db_select(static::$dbTableName, 't');
     $query->fields('t');
-    $query->condition(static::$db_table_identifier, $this->{static::$db_table_identifier});
+    $query->condition(static::$dbTableIdentifier, $this->{static::$dbTableIdentifier});
     $result = $query->execute()->fetchObject();
     if ($result) {
       foreach ($this as $k => &$v) {
@@ -155,7 +155,7 @@ abstract class MyObject {
    */
   protected static function _load($conditions = array(), $asArray = FALSE) {
     $objectsArray = array();
-    $query = db_select(static::$db_table_name, 't');
+    $query = db_select(static::$dbTableName, 't');
     $query->fields('t');
     foreach ($conditions as $cond) {
       $cond1 = $cond[0];
@@ -184,17 +184,17 @@ abstract class MyObject {
   }
   public static function loadAll() {
     $steps = array();
-    $query = db_select(static::$db_table_name, 's');
-    $query->fields('s', array(static::$db_table_identifier));
+    $query = db_select(static::$dbTableName, 's');
+    $query->fields('s', array(static::$dbTableIdentifier));
     $result = $query->execute();
     while ($row = $result->fetchObject()) {
-      $steps[] = new static(array(static::$db_table_identifier => $row->sid));
+      $steps[] = new static(array(static::$dbTableIdentifier => $row->sid));
     }
     return $steps;
   }
   public function delete() {
-    $q = db_delete(static::$db_table_name);
-    $q->condition(static::$db_table_identifier, $this->{static::$db_table_identifier});
+    $q = db_delete(static::$dbTableName);
+    $q->condition(static::$dbTableIdentifier, $this->{static::$dbTableIdentifier});
     return $q->execute();
   }
 }
