@@ -1,0 +1,8 @@
+uuid: bcc0c45a-7917-4a87-9aba-e3d4ae0b4e0e
+langcode: fr
+status: true
+dependencies: {  }
+id: date_only_medium
+label: 'Date Seule - format moyen'
+locked: false
+pattern: 'D d/m/Y'

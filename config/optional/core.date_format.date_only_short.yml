@@ -1,0 +1,8 @@
+uuid: 98c03ac3-f661-49ca-a6ef-3f959a3f06aa
+langcode: fr
+status: true
+dependencies: {  }
+id: date_only_short
+label: 'Date Seule - format court'
+locked: false
+pattern: d/m/Y

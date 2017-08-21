@@ -1,0 +1,8 @@
+uuid: 8f48f3fc-0cdd-4ad2-bb43-1a9e46e5f971
+langcode: fr
+status: true
+dependencies: {  }
+id: date_only_long
+label: 'Date Seule - format long'
+locked: false
+pattern: 'l d F Y'
