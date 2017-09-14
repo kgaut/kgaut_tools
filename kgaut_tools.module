@@ -93,6 +93,24 @@ function kgaut_tools_theme_suggestions_user(array $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  *
+ * Add custom variables to DrupalSettings.
+ */
+function kgaut_tools_theme_suggestions_node(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\node\Entity\Node $node */
+  $node = $variables['elements']['#node'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
+  $bundle = $node->bundle();
+  $sanitized_bundle = strtr($bundle, '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_bundle;
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_bundle . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
  * Add view mode to page based on view bundle.
  */
 function kgaut_tools_theme_suggestions_page(array $variables) {
