@@ -1,0 +1,7 @@
+langcode: fr
+status: true
+dependencies: {  }
+id: date_rfc_2822
+label: 'Date Format RFC 2822'
+locked: false
+pattern: D, d M Y H:i:s O

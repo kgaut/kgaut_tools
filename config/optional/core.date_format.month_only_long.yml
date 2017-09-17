@@ -1,7 +1,7 @@
 langcode: fr
 status: true
 dependencies: {  }
-id: month_year_long
+id: month_only_long
 label: 'Mois & Année - format long'
 locked: false
 pattern: 'F Y'
