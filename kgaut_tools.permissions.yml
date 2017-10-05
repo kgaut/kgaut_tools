@@ -1,0 +1,3 @@
+administer kgaut_tools configuration:
+  title: "Configure Kgaut tools settings"
+  restrict access: true

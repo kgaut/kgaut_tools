@@ -1,0 +1,8 @@
+kgaut_tools.admin_config:
+  path: '/admin/config/system/kgaut_tools'
+  defaults:
+    _form: '\Drupal\kgaut_tools\Form\KgautToolsConfigForm'
+    _title: 'Configuration Boite à outils « Kgaut Tools »'
+  requirements:
+    _permission: 'administer kgaut_tools configuration'
+  

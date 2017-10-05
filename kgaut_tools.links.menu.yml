@@ -1,0 +1,4 @@
+kgaut_tools.admin_config:
+  title: 'Configuration Boite à outils « Kgaut Tools »'
+  parent: system.admin_config_system
+  route_name: kgaut_tools.admin_config
