@@ -45,8 +45,7 @@ class TextStrippedFormatter extends TextTrimmedFormatter {
         '#format' => $item->format,
         '#langcode' => $item->getLangcode(),
       ];
-
-      if ($this->getPluginId() === 'text_summary_or_trimmed' && !empty($item->summary)) {
+      if ($this->getPluginId() === 'text_summary_or_trimmed_then_stripped' && !empty($item->summary)) {
         $elements[$delta]['#text'] = strip_tags($item->summary);
       }
       else {
