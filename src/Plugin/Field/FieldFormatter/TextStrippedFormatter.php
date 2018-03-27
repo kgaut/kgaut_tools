@@ -52,6 +52,8 @@ class TextStrippedFormatter extends TextTrimmedFormatter {
         $elements[$delta]['#text'] = strip_tags($item->value);
         $render_as_summary($elements[$delta]);
       }
+      $elements[$delta]['#text'] = trim($elements[$delta]['#text']);
+      $elements[$delta]['#text'] = str_replace('&nbsp;', '', $elements[$delta]['#text']);
     }
 
     return $elements;
