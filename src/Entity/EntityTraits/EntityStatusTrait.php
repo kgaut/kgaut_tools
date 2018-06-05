@@ -26,7 +26,9 @@ trait EntityStatusTrait {
     return BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the content is published.'))
-      ->setDefaultValue(TRUE);
+      ->setDefaultValue(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
   }
 
 }
