@@ -67,6 +67,7 @@ function kgaut_tools_preprocess(&$variables, $hook) {
   $variables['baseurl_front'] = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
   $variables['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
   $variables['baseurl_theme'] = $variables['baseurl_front'] . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
+  $variables['baseurl_default_theme'] = $variables['baseurl_front'] . drupal_get_path('theme', \Drupal::config('system.theme')->get('default'));
   $variables['pathtotfiles'] = PublicStream::basePath();
   $variables['baseurl_files'] = $variables['baseurl_front'] . PublicStream::basePath();
 }
