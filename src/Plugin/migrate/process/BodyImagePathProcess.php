@@ -19,10 +19,11 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $destination = $this->configuration['images_destination'];
     $url_source = $this->configuration['url_source'];
     $replace = (bool) $this->configuration['replace'];
-    dd('Replace'. (int) $replace);
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
+    $sources = [];
+    $destinations = [];
     if (!empty($result[0])) {
       $i = 0;
       foreach ($result as $img_tags) {
@@ -36,23 +37,34 @@ class BodyImagePathProcess extends ProcessPluginBase {
             $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
             $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
             $new_destination = $destination_finale . '/' . $filename_destination;
-            if($replace || file_exists($new_destination)) {
-              dd('file not existing '.$new_destination);
-              if (file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
-                if (filter_var($filepath, FILTER_VALIDATE_URL)) {
-                  $file_contents = file_get_contents($filepath);
-                }
-                else {
-                  $file_contents = file_get_contents($url_source . $filepath);
-                }
-                if (!empty($file_contents)) {
-                  if ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
-                    $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
-                    $html = str_replace($filepath, $uri_destination, $html);
-                  }
-                }
-              }
+            $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
+            if(file_exists($new_destination) && !$replace) {
+              $sources[$i] = $filepath;
+              $destinations[$i] = $uri_destination;
+              \Drupal::logger('migrate')->info(t('File @file existing', ['@file' => $new_destination]));
+              continue;
             }
+            if (!file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
+              \Drupal::logger('migrate')->error(t('Error creating folder @folder', ['@folder' => $destination_finale]));
+              continue;
+            }
+            if (filter_var($filepath, FILTER_VALIDATE_URL)) {
+              $file_contents = file_get_contents($filepath);
+            }
+            else {
+              $file_contents = file_get_contents($url_source . $filepath);
+            }
+            if (empty($file_contents)) {
+              \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
+            }
+            if ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
+              $sources[$i] = $filepath;
+              $destinations[$i] = $uri_destination;
+            }
+            else {
+              \Drupal::logger('migrate')->error(t('Error saving file @file', ['@file' => $new_destination]));
+            }
+            $html = str_replace($sources, $destinations, $html);
           }
         }
       }
