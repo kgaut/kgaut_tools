@@ -16,9 +16,10 @@ class BodyImagePathProcess extends ProcessPluginBase {
    */
   public function transform($html, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     // Values for the following variables are specified in the YAML file above.
-    $images_source = $this->configuration['images_source'];
     $destination = $this->configuration['images_destination'];
     $url_source = $this->configuration['url_source'];
+    $replace = (bool) $this->configuration['replace'];
+    dd('Replace'. (int) $replace);
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -32,20 +33,23 @@ class BodyImagePathProcess extends ProcessPluginBase {
           if (!empty($tag_attributes[2][1])) {
             // Create file object from a locally copied file.
             $filename = basename($filepath);
-            $destination_finale = $destination . 'node-' . $stringCleaner->clean($row->getSourceProperty('title'));
-            if (file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
-              if (filter_var($filepath, FILTER_VALIDATE_URL)) {
-                $file_contents = file_get_contents($filepath);
-              }
-              else {
-                $file_contents = file_get_contents($url_source . $filepath);
-              }
-              $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
-              $new_destination = $destination_finale . '/' . $filename_destination;
-              if (!empty($file_contents)) {
-                if ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
-                  $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
-                  $html = str_replace($filepath, $uri_destination, $html);
+            $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
+            $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
+            $new_destination = $destination_finale . '/' . $filename_destination;
+            if($replace || file_exists($new_destination)) {
+              dd('file not existing '.$new_destination);
+              if (file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
+                if (filter_var($filepath, FILTER_VALIDATE_URL)) {
+                  $file_contents = file_get_contents($filepath);
+                }
+                else {
+                  $file_contents = file_get_contents($url_source . $filepath);
+                }
+                if (!empty($file_contents)) {
+                  if ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
+                    $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
+                    $html = str_replace($filepath, $uri_destination, $html);
+                  }
                 }
               }
             }
