@@ -18,7 +18,9 @@ class BodyImagePathProcess extends ProcessPluginBase {
     // Values for the following variables are specified in the YAML file above.
     $destination = $this->configuration['images_destination'];
     $url_source = $this->configuration['url_source'];
+    $images_source = $this->configuration['images_source'];
     $replace = (bool) $this->configuration['replace'];
+    $rename = (bool) $this->configuration['rename'];
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -33,15 +35,22 @@ class BodyImagePathProcess extends ProcessPluginBase {
           $filepath = str_replace('"', '', $tag_attributes[2][1]);
           if (!empty($tag_attributes[2][1])) {
             // Create file object from a locally copied file.
-            $filename = basename($filepath);
-            $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
+            $pathinfos = pathinfo($filepath);
+            $filename = $pathinfos['basename'];
+            $path = $pathinfos['dirname'];
+            if($rename) {
+              $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
+            }
+            else {
+              $new_path = str_replace($images_source, '', $path);
+              $destination_finale = $destination . $new_path;
+            }
             $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
             $new_destination = $destination_finale . '/' . $filename_destination;
             $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
             if(file_exists($new_destination) && !$replace) {
               $sources[$i] = $filepath;
               $destinations[$i] = $uri_destination;
-              \Drupal::logger('migrate')->info(t('File @file existing', ['@file' => $new_destination]));
               continue;
             }
             if (!file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
