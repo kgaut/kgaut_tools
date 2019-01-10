@@ -52,10 +52,12 @@ trait EntityChangedTrait {
   /**
    * @return BaseFieldDefinition
    */
-  public static function baseFieldChanged() {
-    return BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the entity was last edited.'));
+  public static function baseFieldChanged($title = 'Changed', $description = NULL) {
+    $field =  BaseFieldDefinition::create('changed')->setLabel($title);
+    if ($description !== NULL) {
+      $field->setDescription($description);
+    }
+    return $field;
   }
 
 }

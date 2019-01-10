@@ -24,10 +24,12 @@ trait EntityCreatedTrait {
   /**
    * @return BaseFieldDefinition
    */
-  public static function baseFieldCreated() {
-    return BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+  public static function baseFieldCreated($title = 'Created', $description = NULL) {
+    $field =  BaseFieldDefinition::create('created')->setLabel($title);
+    if ($description !== NULL) {
+      $field->setDescription($description);
+    }
+    return $field;
   }
 
 }
