@@ -73,10 +73,10 @@ class BodyImagePathProcess extends ProcessPluginBase {
             else {
               \Drupal::logger('migrate')->error(t('Error saving file @file', ['@file' => $new_destination]));
             }
-            $html = str_replace($sources, $destinations, $html);
           }
         }
       }
+      $html = str_replace($sources, $destinations, $html);
     }
     return $html;
   }
