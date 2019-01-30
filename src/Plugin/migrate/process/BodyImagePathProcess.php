@@ -21,6 +21,13 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $images_source = $this->configuration['images_source'];
     $replace = (bool) $this->configuration['replace'];
     $rename = (bool) $this->configuration['rename'];
+
+    $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename);
+
+    return $html;
+  }
+
+  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -78,6 +85,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
       }
       $html = str_replace($sources, $destinations, $html);
     }
+
     return $html;
   }
 }

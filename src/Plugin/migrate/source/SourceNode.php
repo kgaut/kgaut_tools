@@ -23,14 +23,14 @@ abstract class SourceNode extends SqlBase {
     ];
   }
 
-  public function createUpdateParagraph(Row $row, $paragraphType, $delta, $fields = [], $language = NULL) {
+  public function createUpdateParagraph(Row $row, $paragraphType, $field_name, $delta, $fields = [], $language = NULL) {
     $paragraph = NULL;
     if($row->getIdMap()['destid1'] !== NULL) {
       $node = Node::load($row->getIdMap()['destid1']);
       if($language) {
         $node = $node->getTranslation($language);
       }
-      $paragraphs = $node->get('field_paragraphs')->getValue();
+      $paragraphs = $node->get($field_name)->getValue();
       if(isset($paragraphs[$delta]) && $paragraph = Paragraph::load($paragraphs[$delta]['target_id'])) {
         foreach ($fields as $key => $value) {
           $paragraph->set($key, $value);
