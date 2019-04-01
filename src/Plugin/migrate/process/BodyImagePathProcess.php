@@ -19,15 +19,15 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $destination = $this->configuration['images_destination'];
     $url_source = $this->configuration['url_source'];
     $images_source = $this->configuration['images_source'];
-    $replace = (bool) $this->configuration['replace'];
-    $rename = (bool) $this->configuration['rename'];
+    $replace = isset($this->configuration['replace']) ? $this->configuration['replace'] : FALSE;
+    $rename = isset($this->configuration['rename']) ? $this->configuration['rename'] : FALSE;
 
     $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename);
 
     return $html;
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename) {
+  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace = FALSE, $rename = FALSE) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -37,10 +37,11 @@ class BodyImagePathProcess extends ProcessPluginBase {
       $i = 0;
       foreach ($result as $img_tags) {
         foreach ($img_tags as $img_tag) {
+          dd($img_tag);
           $i++;
           preg_match_all('/(alt|title|src)=("[^"]*")/i', $img_tag, $tag_attributes);
-          $filepath = str_replace('"', '', $tag_attributes[2][1]);
           if (!empty($tag_attributes[2][1])) {
+            $filepath = str_replace('"', '', $tag_attributes[2][1]);
             // Create file object from a locally copied file.
             $pathinfos = pathinfo($filepath);
             $filename = $pathinfos['basename'];
