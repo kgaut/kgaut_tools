@@ -19,15 +19,15 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $destination = $this->configuration['images_destination'];
     $url_source = $this->configuration['url_source'];
     $images_source = $this->configuration['images_source'];
-    $replace = isset($this->configuration['replace']) ? $this->configuration['replace'] : FALSE;
-    $rename = isset($this->configuration['rename']) ? $this->configuration['rename'] : FALSE;
+    $replace = (bool) $this->configuration['replace'];
+    $rename = (bool) $this->configuration['rename'];
 
     $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename);
 
     return $html;
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace = FALSE, $rename = FALSE) {
+  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -37,23 +37,23 @@ class BodyImagePathProcess extends ProcessPluginBase {
       $i = 0;
       foreach ($result as $img_tags) {
         foreach ($img_tags as $img_tag) {
-          dd($img_tag);
           $i++;
-          preg_match_all('/(alt|title|src)=("[^"]*")/i', $img_tag, $tag_attributes);
-          if (!empty($tag_attributes[2][1])) {
-            $filepath = str_replace('"', '', $tag_attributes[2][1]);
+          preg_match_all('/(src)=("[^"]*")/i', $img_tag, $tag_attributes);
+          if (!empty($tag_attributes[2][0])) {
+            $filepath = str_replace('"', '', $tag_attributes[2][0]);
             // Create file object from a locally copied file.
             $pathinfos = pathinfo($filepath);
             $filename = $pathinfos['basename'];
             $path = $pathinfos['dirname'];
             if($rename) {
               $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
+              $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
             }
             else {
               $new_path = str_replace($images_source, '', $path);
               $destination_finale = $destination . $new_path;
+              $filename_destination = urldecode($filename);
             }
-            $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
             $new_destination = $destination_finale . '/' . $filename_destination;
             $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
             if(file_exists($new_destination) && !$replace) {
