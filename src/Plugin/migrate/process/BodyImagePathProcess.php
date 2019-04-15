@@ -27,7 +27,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
     return $html;
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename) {
+  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace = FALSE, $rename = FALSE) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
