@@ -25,7 +25,7 @@ abstract class SourceNode extends SqlBase {
 
   public function createUpdateParagraph(Row $row, $paragraphType, $field_name, $delta, $fields = [], $language = NULL) {
     $paragraph = NULL;
-    if($row->getIdMap()['destid1'] !== NULL) {
+    if(isset($row->getIdMap()['destid1'])) {
       $node = Node::load($row->getIdMap()['destid1']);
       if($language) {
         $node = $node->getTranslation($language);
