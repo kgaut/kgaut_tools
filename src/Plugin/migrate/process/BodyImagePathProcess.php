@@ -19,8 +19,8 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $destination = $this->configuration['images_destination'];
     $url_source = $this->configuration['url_source'];
     $images_source = $this->configuration['images_source'];
-    $replace = (bool) $this->configuration['replace'];
-    $rename = (bool) $this->configuration['rename'];
+    $replace = isset($this->configuration['replace']) ? (bool) $this->configuration['replace'] : FALSE;
+    $rename = isset($this->configuration['rename']) ? (bool) $this->configuration['rename'] : FALSE;
 
     $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename);
 
