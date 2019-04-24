@@ -27,7 +27,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
     return $html;
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, $row, $replace = FALSE, $rename = FALSE) {
+  public static function parseTexte($html, $images_source, $url_source, $destination, Row $row, $replace = FALSE, $rename = FALSE) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -44,6 +44,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
             // Create file object from a locally copied file.
             $pathinfos = pathinfo($filepath);
             $filename = $pathinfos['basename'];
+            $filename = substr($filename, 0, strpos($filename, '?'));
             $path = $pathinfos['dirname'];
             if($rename) {
               $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
