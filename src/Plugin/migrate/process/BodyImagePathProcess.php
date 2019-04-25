@@ -44,7 +44,9 @@ class BodyImagePathProcess extends ProcessPluginBase {
             // Create file object from a locally copied file.
             $pathinfos = pathinfo($filepath);
             $filename = $pathinfos['basename'];
-            $filename = substr($filename, 0, strpos($filename, '?'));
+            if (strpos($filename, '?') > 0) {
+              $filename = substr($filename, 0, strpos($filename, '?'));
+            }
             $path = $pathinfos['dirname'];
             if($rename) {
               $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
