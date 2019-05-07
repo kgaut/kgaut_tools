@@ -33,8 +33,8 @@ abstract class MyObject {
           continue;
         }
         //puis avec les datas par default de la classe
-        if (isset(static::$defaultData[$key])) {
-          $val = static::$defaultData[$key];
+        if (isset(static::$default_data[$key])) {
+          $val = static::$default_data[$key];
           continue;
         }
         //puis enfin avec des valeurs de bases standards
@@ -182,13 +182,14 @@ abstract class MyObject {
       return $objectsArray;
     }
   }
+
   public static function loadAll() {
     $steps = array();
     $query = db_select(static::$dbTableName, 's');
     $query->fields('s', array(static::$dbTableIdentifier));
     $result = $query->execute();
     while ($row = $result->fetchObject()) {
-      $steps[] = new static(array(static::$dbTableIdentifier => $row->sid));
+      $steps[] = new static(array(static::$dbTableIdentifier => $row->{static::$dbTableIdentifier}));
     }
     return $steps;
   }
