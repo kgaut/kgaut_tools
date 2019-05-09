@@ -31,7 +31,17 @@ abstract class SourceNode extends SqlBase {
         $node = $node->getTranslation($language);
       }
       $paragraphs = $node->get($field_name)->getValue();
+      /** @var Paragraph $paragraph */
       if(isset($paragraphs[$delta]) && $paragraph = Paragraph::load($paragraphs[$delta]['target_id'])) {
+        if ($language !== NULL && $paragraph->get('langcode')->value !== $language) {
+          //$paragraph = FALSE;
+          if($paragraph->hasTranslation($language)) {
+            $paragraph = $paragraph->getTranslation($language);
+          }
+          else {
+            $paragraph = $paragraph->addTranslation($language);
+          }
+        }
         foreach ($fields as $key => $value) {
           $paragraph->set($key, $value);
         }
@@ -39,7 +49,7 @@ abstract class SourceNode extends SqlBase {
       }
     }
     if(!$paragraph) {
-      $paragraph = Paragraph::create(['type' => $paragraphType]);
+      $paragraph = Paragraph::create(['type' => $paragraphType, 'langcode' => $language]);
       foreach ($fields as $key => $value) {
         $paragraph->set($key, $value);
       }
