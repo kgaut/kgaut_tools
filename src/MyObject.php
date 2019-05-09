@@ -33,8 +33,8 @@ abstract class MyObject {
           continue;
         }
         //puis avec les datas par default de la classe
-        if (isset(static::$default_data[$key])) {
-          $val = static::$default_data[$key];
+        if (isset(static::$defaultData[$key])) {
+          $val = static::$defaultData[$key];
           continue;
         }
         //puis enfin avec des valeurs de bases standards
