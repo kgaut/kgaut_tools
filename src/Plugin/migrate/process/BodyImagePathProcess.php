@@ -89,7 +89,28 @@ class BodyImagePathProcess extends ProcessPluginBase {
       }
       $html = str_replace($sources, $destinations, $html);
     }
+/*
+    //<a[^>\/]+(\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))[.]+
+    preg_match_all('/(?<=(["\']))((?<=href=[\'"])).*?(?:png|jpg|jpeg|gif|png|svg)/i', $html, $result);
+    if(!empty($result[0])) {
+      dd($result);
+      $i = 0;
+      dd('-----------');
+      $sources = [];
+      $destinations = [];
+      foreach ($result[1] as $img) {
+        if (strpos($img, '/') === 0) {
+          dd($img);
+          $i++;
+          $filepath = str_replace('"', '', $img);
 
+        }
+      }
+      dd($sources);
+      dd($destinations);
+      dd($row->get);
+    }
+*/
     return $html;
   }
 }
