@@ -21,13 +21,13 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $images_source = $this->configuration['images_source'];
     $replace = isset($this->configuration['replace']) ? (bool) $this->configuration['replace'] : FALSE;
     $rename = isset($this->configuration['rename']) ? (bool) $this->configuration['rename'] : FALSE;
-
-    $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename);
+    $auth = isset($this->configuration['auth']) ? $this->configuration['auth'] : FALSE;
+    $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename, $auth);
 
     return $html;
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, Row $row, $replace = FALSE, $rename = FALSE) {
+  public static function parseTexte($html, $images_source, $url_source, $destination, Row $row, $replace = FALSE, $rename = FALSE, $auth = FALSE) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -69,15 +69,23 @@ class BodyImagePathProcess extends ProcessPluginBase {
               continue;
             }
             if (filter_var($filepath, FILTER_VALIDATE_URL)) {
-              $file_contents = file_get_contents($filepath);
+              $context = NULL;
+              if($auth) {
+                $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
+              }
+              $file_contents = file_get_contents($filepath, FALSE, $context);
             }
             else {
-              $file_contents = file_get_contents($url_source . $filepath);
+              $context = NULL;
+              if($auth) {
+                $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
+              }
+              $file_contents = file_get_contents($url_source . $filepath, FALSE, $context);
             }
-            if (empty($file_contents)) {
+            if (!$file_contents || empty($file_contents)) {
               \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
             }
-            if ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
+            elseif ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
               $sources[$i] = $filepath;
               $destinations[$i] = $uri_destination;
             }
