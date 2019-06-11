@@ -63,8 +63,9 @@ function kgaut_tools_entity_insert(EntityInterface $entity) {
  * Add custom variable to all templates.
  */
 function kgaut_tools_preprocess(&$variables, $hook) {
+  $isHttps = \Drupal::request()->isSecure();
   $variables['basepath'] = base_path();
-  $variables['baseurl_front'] = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
+  $variables['baseurl_front'] = Url::fromRoute('<front>', [], ['absolute' => TRUE, 'https' => $isHttps])->toString();
   $variables['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
   $variables['path_default_theme'] = base_path() . drupal_get_path('theme', \Drupal::config('system.theme')->get('default'));
   $variables['baseurl_theme'] = $variables['baseurl_front'] . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
@@ -72,6 +73,8 @@ function kgaut_tools_preprocess(&$variables, $hook) {
   $variables['pathtotfiles'] = PublicStream::basePath();
   $variables['baseurl_files'] = $variables['baseurl_front'] . PublicStream::basePath();
 }
+
+
 
 /**
  * Implements hook_page_attachments().
