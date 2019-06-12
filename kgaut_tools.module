@@ -63,7 +63,7 @@ function kgaut_tools_entity_insert(EntityInterface $entity) {
  * Add custom variable to all templates.
  */
 function kgaut_tools_preprocess(&$variables, $hook) {
-  $isHttps = \Drupal::request()->isSecure();
+  $isHttps = \Drupal::request()->isSecure() || \Drupal::service('settings')->get('force_https');
   $variables['basepath'] = base_path();
   $variables['baseurl_front'] = Url::fromRoute('<front>', [], ['absolute' => TRUE, 'https' => $isHttps])->toString();
   $variables['pathtotheme'] = base_path() . drupal_get_path('theme', \Drupal::theme()->getActiveTheme()->getName());
