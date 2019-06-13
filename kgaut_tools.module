@@ -74,7 +74,18 @@ function kgaut_tools_preprocess(&$variables, $hook) {
   $variables['baseurl_files'] = $variables['baseurl_front'] . PublicStream::basePath();
 }
 
-
+/**
+ * Implements hook_form_alter().
+ */
+function kgaut_tools_form_system_performance_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $form['caching']['page_cache_maximum_age']['#options'] += [
+    172800 => '2 days',
+    345600 => '4 days',
+    432000 => '5 days',
+    864000 => '10 days',
+    1728000 => '20 days',
+  ];
+}
 
 /**
  * Implements hook_page_attachments().
