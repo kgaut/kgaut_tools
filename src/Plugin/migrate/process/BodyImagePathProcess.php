@@ -22,12 +22,13 @@ class BodyImagePathProcess extends ProcessPluginBase {
     $replace = isset($this->configuration['replace']) ? (bool) $this->configuration['replace'] : FALSE;
     $rename = isset($this->configuration['rename']) ? (bool) $this->configuration['rename'] : FALSE;
     $auth = isset($this->configuration['auth']) ? $this->configuration['auth'] : FALSE;
-    $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename, $auth);
+    $url_to_replace = isset($this->configuration['url_to_replace']) ? $this->configuration['url_to_replace'] : FALSE;
+    $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename, $auth, $url_to_replace);
 
     return $html;
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, Row $row, $replace = FALSE, $rename = FALSE, $auth = FALSE) {
+  public static function parseTexte($html, $images_source, $url_source, $destination, Row $row, $replace = FALSE, $rename = FALSE, $auth = FALSE, $url_to_replace = FALSE) {
     /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
     $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
     preg_match_all('/<img[^>]+>/i', $html, $result);
@@ -72,6 +73,9 @@ class BodyImagePathProcess extends ProcessPluginBase {
               $context = NULL;
               if($auth) {
                 $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
+              }
+              if($url_to_replace) {
+                $filepath = str_replace($url_to_replace, $url_source, $filepath)
               }
               $file_contents = file_get_contents($filepath, FALSE, $context);
             }
