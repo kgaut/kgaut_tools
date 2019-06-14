@@ -75,7 +75,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
                 $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
               }
               if($url_to_replace) {
-                $filepath = str_replace($url_to_replace, $url_source, $filepath)
+                $filepath = str_replace($url_to_replace, $url_source, $filepath);
               }
               $file_contents = file_get_contents($filepath, FALSE, $context);
             }
