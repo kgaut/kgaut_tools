@@ -23,6 +23,17 @@ $cleanString = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->
 $cleanStringWithoutDash = \Drupal::service('kgaut_tools.stringcleaner')->clean($categorie->name,true); 
 ```
 
+### TranslationImporter Service
+
+Allow to import translation for a given string with a given language.
+
+Usage example : 
+
+```
+$translationImporter = \Drupal::service('kgaut_tools.translation_importer');
+$translationImporter->importTranslation("I love drupal", 'fr', "J'aime drupal");
+```
+
 ### Create image derivates during upload
 Inspired by @flocondetoile's post : http://flocondetoile.fr/blog/generate-programmatically-image-styles-drupal-8
 

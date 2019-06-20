@@ -3,3 +3,10 @@ services:
     class: Drupal\kgaut_tools\StringCleaner
     arguments: ['@transliteration', '@pathauto.alias_cleaner']
 
+  logger.channel.kgaut_tools:
+    parent: logger.channel_base
+    arguments: ['kgaut_tools']
+
+  kgaut_tools.translation_importer:
+    class: Drupal\kgaut_tools\TranslationImporter
+    arguments: ['@locale.storage','@language_manager']
