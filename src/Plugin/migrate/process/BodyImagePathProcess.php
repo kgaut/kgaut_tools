@@ -114,7 +114,6 @@ class BodyImagePathProcess extends ProcessPluginBase {
       $i = 0;
       $sources = [];
       $destinations = [];
-      dd($result);
       foreach ($result[2] as $key => $img) {
         $i++;
         $img = $img . '.' . $result[3][$key];
