@@ -61,8 +61,10 @@ class BodyImagePathProcess extends ProcessPluginBase {
             $new_destination = $destination_finale . '/' . $filename_destination;
             $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
             if(file_exists($new_destination) && !$replace) {
-              $sources[$i] = $filepath;
-              $destinations[$i] = $uri_destination;
+              $sources[$i] = 'src="' . $filepath;
+              $destinations[$i] = 'src="' . $uri_destination;
+              $sources[$i * 1000] = 'src=\'' . $filepath;
+              $destinations[$i * 1000] = 'src=\'' . $uri_destination;
               continue;
             }
             if (!file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
@@ -90,8 +92,10 @@ class BodyImagePathProcess extends ProcessPluginBase {
               \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
             }
             elseif ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
-              $sources[$i] = $filepath;
-              $destinations[$i] = $uri_destination;
+              $sources[$i] = 'src="' . $filepath;
+              $destinations[$i] = 'src="' . $uri_destination;
+              $sources[$i * 1000] = 'src=\'' . $filepath;
+              $destinations[$i * 1000] = 'src=\'' . $uri_destination;
             }
             else {
               \Drupal::logger('migrate')->error(t('Error saving file @file', ['@file' => $new_destination]));
@@ -102,6 +106,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
       $html = str_replace($sources, $destinations, $html);
     }
 
+    dd($html, '$html');
     $result = NULL;
     //<a[^>\/]+(\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))[.]+
     preg_match_all('/(href=")([^".]*).*?(:png|jpg|jpeg|gif|png|svg)(")/mi', $html, $result);
@@ -109,6 +114,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
       $i = 0;
       $sources = [];
       $destinations = [];
+      dd($result);
       foreach ($result[2] as $key => $img) {
         $i++;
         $img = $img . '.' . $result[3][$key];
@@ -134,8 +140,10 @@ class BodyImagePathProcess extends ProcessPluginBase {
           $new_destination = $destination_finale . '/' . $filename_destination;
           $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
           if(file_exists($new_destination) && !$replace) {
-            $sources[$i] = $filepath;
-            $destinations[$i] = $uri_destination;
+            $sources[$i] = 'href="' . $filepath;
+            $destinations[$i] = 'href="' . $uri_destination;
+            $sources[$i * 1000] = 'href=\'' . $filepath;
+            $destinations[$i * 1000] = 'href=\'' . $uri_destination;
             continue;
           }
           if (!file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
@@ -163,8 +171,10 @@ class BodyImagePathProcess extends ProcessPluginBase {
             \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
           }
           elseif ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
-            $sources[$i] = $filepath;
-            $destinations[$i] = $uri_destination;
+            $sources[$i] = 'href="' . $filepath;
+            $destinations[$i] = 'href="' . $uri_destination;
+            $sources[$i * 1000] = 'href=\'' . $filepath;
+            $destinations[$i * 1000] = 'href=\'' . $uri_destination;
           }
           else {
             \Drupal::logger('migrate')->error(t('Error saving file @file', ['@file' => $new_destination]));
