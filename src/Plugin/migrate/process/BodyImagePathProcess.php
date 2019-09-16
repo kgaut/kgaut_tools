@@ -106,7 +106,6 @@ class BodyImagePathProcess extends ProcessPluginBase {
       $html = str_replace($sources, $destinations, $html);
     }
 
-    dd($html, '$html');
     $result = NULL;
     //<a[^>\/]+(\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))[.]+
     preg_match_all('/(href=")([^".]*).*?(:png|jpg|jpeg|gif|png|svg)(")/mi', $html, $result);
