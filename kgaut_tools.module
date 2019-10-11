@@ -141,3 +141,14 @@ function kgaut_tools_theme_suggestions_page(array $variables) {
   }
   return $suggestions;
 }
+
+/**
+ * Implements hook_user_login().
+ *
+ * Dispatch UserLoginEvent::kgaut_tools_user_login
+ */
+function kgaut_tools_user_login($account) {
+  $event = new \Drupal\kgaut_tools\Event\UserLoginEvent($account);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event::EVENT_NAME, $event);
+}
