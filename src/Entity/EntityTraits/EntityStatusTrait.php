@@ -15,6 +15,11 @@ trait EntityStatusTrait {
     return $this;
   }
 
+  public function setUnpublished() {
+    $this->set('status', FALSE);
+    return $this;
+  }
+
   public static function baseFieldStatus($title = 'Published', $description = NULL) {
     $field = BaseFieldDefinition::create('boolean')
       ->setLabel(t($title))
