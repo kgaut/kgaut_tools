@@ -131,6 +131,22 @@ function kgaut_tools_theme_suggestions_node(array $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  *
+ */
+function kgaut_tools_theme_suggestions_taxonomy_term(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  $term = $variables['elements']['#taxonomy_term'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
+  $bundle = $term->bundle();
+  $sanitized_bundle = strtr($bundle, '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_bundle . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
  * Add view mode to page based on view bundle.
  */
 function kgaut_tools_theme_suggestions_page(array $variables) {
