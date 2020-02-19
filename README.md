@@ -1,15 +1,7 @@
 # Toolbox module for Drupal 8
 
 ## Installation
-Add the following repo to the "repositories" section of you composer.json file :
 
-```
-{
-    "type": "vcs",
-    "url": "https://github.com/kgaut/kgaut_tools"
-}
-```
-Then execute : 
 `composer require kgaut/kgaut_tools`
 
 ## Features
