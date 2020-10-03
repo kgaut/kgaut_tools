@@ -2,6 +2,14 @@
   "name": "kgaut/kgaut_tools",
   "type": "drupal-module",
   "description": "Tools and services for drupal 8",
+  "authors": [
+    {
+      "name": "Kevin Gautreau",
+      "email": "contact@kgaut.net",
+      "homepage": "https://kgaut.net",
+      "role": "Maintainer"
+    }
+  ],
   "keywords": ["Drupal"],
   "license": "GPL-2.0+",
   "homepage": "https://github.com/kgaut/kgaut_tools",
@@ -10,5 +18,7 @@
     "issues": "https://github.com/kgaut/kgaut_tools/issues",
     "source": "https://github.com/kgaut/kgaut_tools/"
   },
-  "require": { }
+  "require": {
+      "drupal/pathauto": "*"
+  }
 }
