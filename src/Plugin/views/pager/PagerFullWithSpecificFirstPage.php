@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\enise_core\Plugin\views\pager;
+namespace Drupal\kgaut_tools\Plugin\views\pager;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\pager\Full;
