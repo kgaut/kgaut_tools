@@ -107,17 +107,6 @@ class PagerFullWithSpecificFirstPage extends Full {
     $this->view->query->setOffset($offset);
   }
 
-  public function getPagerTotal() {
-    dpm('laaa');
-    if ($items_per_page = (int) $this->getItemsPerPage()) {
-      ddm(ceil($this->total_items / $items_per_page), 'getPagerTotal');
-      return ceil($this->total_items / $items_per_page);
-    }
-    else {
-      return 1;
-    }
-  }
-
   public function updatePageInfo() {
     if (!empty($this->options['total_pages'])) {
       if (($this->options['total_pages'] * $this->options['items_per_page']) < $this->total_items) {
@@ -129,6 +118,7 @@ class PagerFullWithSpecificFirstPage extends Full {
     $items_per_page = $this->getItemsPerPage();
     $items_per_page_first = $this->getItemsPerPageFirst();
     if (!empty($items_per_page)) {
+      // quick fix if specific number on first page
       $total_items = (int) $this->getCurrentPage() !== 0 ? $this->getTotalItems() + $items_per_page_first - 1 : $this->getTotalItems();
       $pager = $this->pagerManager->createPager($total_items, $this->options['items_per_page'], $this->options['id']);
       // See if the requested page was within range:
