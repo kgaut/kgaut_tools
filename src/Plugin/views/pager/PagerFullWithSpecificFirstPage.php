@@ -12,9 +12,9 @@ use Drupal\views\Plugin\views\pager\Full;
  *
  * @ViewsPager(
  *   id = "full_with_first_page",
- *   title = @Translation("Pager Full with specific for first page"),
- *   short_title = @Translation("Pager Full Specific first page"),
- *   help = @Translation("Pager Full with a specific number of item for the first page"),
+ *   title = @Translation("Paged output, full pager with a specific number of items for the first page"),
+ *   short_title = @Translation("Pager Full - specific first page"),
+ *   help = @Translation("Pager full with a specific number of items for the first page"),
  *   theme = "pager",
  *   register_theme = FALSE
  * )
@@ -53,20 +53,47 @@ class PagerFullWithSpecificFirstPage extends Full {
   /**
    * {@inheritdoc}
    */
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
+    // Only accept integer values.
+    $error = FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
-      return $this->formatPlural($this->options['items_per_page'], '@count item, skip @skip', 'Paged, @count items, skip @skip', ['@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']]);
+      if ($this->options['items_per_page'] !== $this->options['items_per_page_first_page']) {
+        return $this->formatPlural($this->options['items_per_page'], '@count item (@count_first for the first page), skip @skip', 'Paged, @count items, skip @skip', [
+          '@count' => $this->options['items_per_page'],
+          '@count_first' => $this->options['items_per_page_first_page'],
+          '@skip' => $this->options['offset'],
+        ]);
+      }
+      return $this->formatPlural($this->options['items_per_page'], '@count item, skip @skip', 'Paged, @count items, skip @skip', [
+        '@count' => $this->options['items_per_page'],
+        '@skip' => $this->options['offset'],
+      ]);
+    }
+    if ($this->options['items_per_page'] !== $this->options['items_per_page_first_page']) {
+      return $this->formatPlural($this->options['items_per_page'], '@count item', 'Paged, @count items (@count_first for the first page)', [
+        '@count' => $this->options['items_per_page'],
+        '@count_first' => $this->options['items_per_page_first_page'],
+      ]);
     }
     return $this->formatPlural($this->options['items_per_page'], '@count item', 'Paged, @count items', ['@count' => $this->options['items_per_page']]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
-    if($this->current_page === 0) {
+    if ($this->current_page === 0) {
       $this->options['items_per_page'] = $this->options['items_per_page_first_page'];
     }
     $limit = $this->options['items_per_page'];
-    $offset =  ($this->current_page - 1) * $this->options['items_per_page'] + $this->options['offset'];
-    if($this->current_page > 0) {
+    $offset = ($this->current_page - 1) * $this->options['items_per_page'] + $this->options['offset'];
+    if ($this->current_page > 0) {
       $offset += $this->options['items_per_page_first_page'];
     }
     if (!empty($this->options['total_pages'])) {
