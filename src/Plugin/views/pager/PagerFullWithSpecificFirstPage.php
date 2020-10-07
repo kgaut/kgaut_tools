@@ -92,8 +92,9 @@ class PagerFullWithSpecificFirstPage extends Full {
       $this->options['items_per_page'] = $this->options['items_per_page_first_page'];
     }
     $limit = $this->options['items_per_page'];
-    $offset = ($this->current_page - 1) * $this->options['items_per_page'] + $this->options['offset'];
+    $offset = $this->options['offset'];
     if ($this->current_page > 0) {
+      $offset += ($this->current_page - 1) * $this->options['items_per_page'];
       $offset += $this->options['items_per_page_first_page'];
     }
     if (!empty($this->options['total_pages'])) {
