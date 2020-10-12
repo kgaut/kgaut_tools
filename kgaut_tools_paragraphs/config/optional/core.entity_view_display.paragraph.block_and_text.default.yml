@@ -9,6 +9,8 @@ dependencies:
   module:
     - block_field
     - text
+_core:
+  default_config_hash: _uwUlkAjKMVNpnqe6IW7EHdD-JN5CwLyHegzwpNFyj0
 id: paragraph.block_and_text.default
 targetEntityType: paragraph
 bundle: block_and_text
@@ -16,14 +18,14 @@ mode: default
 content:
   field_block:
     weight: 0
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: block_field
     region: content
   field_text:
     weight: 1
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
