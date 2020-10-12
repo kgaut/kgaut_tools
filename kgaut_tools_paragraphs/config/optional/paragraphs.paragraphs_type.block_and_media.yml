@@ -1,0 +1,10 @@
+uuid: 3a6f7348-04cd-418c-a4f0-cd9680036851
+langcode: fr
+status: true
+dependencies: {  }
+id: block_and_media
+label: 'Block and media'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

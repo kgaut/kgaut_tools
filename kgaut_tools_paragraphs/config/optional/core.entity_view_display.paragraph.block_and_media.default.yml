@@ -1,0 +1,31 @@
+uuid: adc229b0-2162-48b6-8383-16a10dc25640
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.block_and_media.field_block
+    - field.field.paragraph.block_and_media.field_media
+    - paragraphs.paragraphs_type.block_and_media
+  module:
+    - block_field
+id: paragraph.block_and_media.default
+targetEntityType: paragraph
+bundle: block_and_media
+mode: default
+content:
+  field_block:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: block_field
+    region: content
+  field_media:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }

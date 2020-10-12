@@ -1,0 +1,32 @@
+uuid: af9f9909-5f98-4ebb-93e0-5bf421a25c9a
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.text_and_media.field_media
+    - field.field.paragraph.text_and_media.field_text
+    - paragraphs.paragraphs_type.text_and_media
+  module:
+    - text
+id: paragraph.text_and_media.default
+targetEntityType: paragraph
+bundle: text_and_media
+mode: default
+content:
+  field_media:
+    type: entity_reference_entity_view
+    weight: 1
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_text:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden: {  }

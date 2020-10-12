@@ -1,0 +1,37 @@
+uuid: f4079f73-e5aa-4b1e-80c8-43b526d4399f
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.block_and_media.field_block
+    - field.field.paragraph.block_and_media.field_media
+    - paragraphs.paragraphs_type.block_and_media
+  module:
+    - block_field
+id: paragraph.block_and_media.default
+targetEntityType: paragraph
+bundle: block_and_media
+mode: default
+content:
+  field_block:
+    weight: 0
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+    type: block_field_default
+    region: content
+  field_media:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true

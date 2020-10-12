@@ -20,5 +20,9 @@
   },
   "require": {
       "drupal/pathauto": "*"
-  }
+  },
+    "suggest": {
+        "drupal/block_field": "*",
+        "drupal/paragraphs": "*"
+    }
 }

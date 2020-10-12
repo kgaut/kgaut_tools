@@ -1,0 +1,9 @@
+name: Kgaut Tools Paragraphs
+type: module
+description: Paragraphs presets
+core_version_requirement: ^8 || ^9
+package: Kgaut Tools
+dependencies:
+  - paragraphs
+  - media
+  - block_field

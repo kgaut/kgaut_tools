@@ -1,0 +1,36 @@
+uuid: d996b879-090d-4c94-be3a-baffc4068ce9
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.block_and_text.field_block
+    - field.field.paragraph.block_and_text.field_text
+    - paragraphs.paragraphs_type.block_and_text
+  module:
+    - block_field
+    - text
+id: paragraph.block_and_text.default
+targetEntityType: paragraph
+bundle: block_and_text
+mode: default
+content:
+  field_block:
+    weight: 0
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+    type: block_field_default
+    region: content
+  field_text:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+hidden:
+  created: true
+  status: true

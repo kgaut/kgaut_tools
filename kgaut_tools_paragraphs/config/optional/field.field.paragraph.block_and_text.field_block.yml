@@ -1,0 +1,24 @@
+uuid: 4ef80026-2406-4183-8497-efa1d6130c8b
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_block
+    - paragraphs.paragraphs_type.block_and_text
+  module:
+    - block_field
+id: paragraph.block_and_text.field_block
+field_name: field_block
+entity_type: paragraph
+bundle: block_and_text
+label: Block
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids: {  }
+field_type: block_field
