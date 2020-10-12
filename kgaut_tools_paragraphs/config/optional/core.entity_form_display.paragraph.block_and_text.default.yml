@@ -9,13 +9,15 @@ dependencies:
   module:
     - block_field
     - text
+_core:
+  default_config_hash: 17pLwXLU2AikwKrtegc8r_julflStcWlhW6_4UO2bjI
 id: paragraph.block_and_text.default
 targetEntityType: paragraph
 bundle: block_and_text
 mode: default
 content:
   field_block:
-    weight: 0
+    weight: 1
     settings:
       plugin_id: ''
       settings: {  }
@@ -24,13 +26,19 @@ content:
     type: block_field_default
     region: content
   field_text:
-    weight: 1
+    weight: 2
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
     region: content
+  layout:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   status: true

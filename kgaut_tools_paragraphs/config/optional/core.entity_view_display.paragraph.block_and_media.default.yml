@@ -8,6 +8,8 @@ dependencies:
     - paragraphs.paragraphs_type.block_and_media
   module:
     - block_field
+_core:
+  default_config_hash: as85uZ-ZsKt0VbuCQvB_mOTrtjBta1Zbw4X3KIf_yHA
 id: paragraph.block_and_media.default
 targetEntityType: paragraph
 bundle: block_and_media
@@ -15,14 +17,14 @@ mode: default
 content:
   field_block:
     weight: 0
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: block_field
     region: content
   field_media:
     weight: 1
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }

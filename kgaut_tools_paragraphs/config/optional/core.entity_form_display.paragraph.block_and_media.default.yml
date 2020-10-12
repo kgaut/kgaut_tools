@@ -8,13 +8,15 @@ dependencies:
     - paragraphs.paragraphs_type.block_and_media
   module:
     - block_field
+_core:
+  default_config_hash: 2b7Vo3jIcJ0dpS4zDjPlcsj6TGOEN_gQ6pkOkv0naLw
 id: paragraph.block_and_media.default
 targetEntityType: paragraph
 bundle: block_and_media
 mode: default
 content:
   field_block:
-    weight: 0
+    weight: 1
     settings:
       plugin_id: ''
       settings: {  }
@@ -23,7 +25,7 @@ content:
     type: block_field_default
     region: content
   field_media:
-    weight: 1
+    weight: 2
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -32,6 +34,12 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  layout:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   created: true
   status: true

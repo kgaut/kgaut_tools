@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function kgaut_tools_paragraphs_install($is_syncing) {
+  kgaut_tools_paragraphs_update_8001();
+}
+
+/**
+ * Create basefield paragraph.layout
+ */
+function kgaut_tools_paragraphs_update_8001(&$sandbox) {
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+  $entity_manager = \Drupal::entityManager();
+  $entity_type = 'paragraph';
+  $fields = ['layout'];
+  foreach ($fields as $field) {
+    $definition = $entity_manager->getFieldStorageDefinitions($entity_type)[$field];
+    $entity_manager->onFieldStorageDefinitionCreate($definition);
+  }
+}
+
+
