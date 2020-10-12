@@ -1,0 +1,9 @@
+<?php
+
+function kgaut_tools_paragraphs_theme_suggestions_paragraph_alter(array &$suggestions, array $variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['elements']['#paragraph'];
+  if (FALSE !== strpos($paragraph->bundle(), '_and_')) {
+    $suggestions[] = 'paragraph__double';
+  }
+}
