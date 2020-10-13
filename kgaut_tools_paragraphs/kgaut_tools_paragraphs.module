@@ -36,6 +36,19 @@ function kgaut_tools_paragraphs_entity_base_field_info(\Drupal\Core\Entity\Entit
       ->setDefaultValue('normal')
       ->setRequired(TRUE)
       ->setDisplayConfigurable('form', TRUE);
+
+    $fields['grid'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Grid'))
+      ->setSetting('allowed_values', [
+        '6_6' => 'Equal size',
+        '8_4' => '66% - 33% (8/12 - 4/12)',
+        '4_8' => '33% - 66% (4/12 - 8/12)',
+        '10_2' => '83% - 17% (10/12 - 2/12)',
+        '2_10' => '17% - 83% (2/12 - 10/12)',
+      ])
+      ->setDefaultValue('50_50')
+      ->setRequired(TRUE)
+      ->setDisplayConfigurable('form', TRUE);
   }
   return $fields;
 }

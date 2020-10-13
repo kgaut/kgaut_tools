@@ -21,4 +21,18 @@ function kgaut_tools_paragraphs_update_8001(&$sandbox) {
   }
 }
 
+/**
+ * Create basefield paragraph.grid
+ */
+function kgaut_tools_paragraphs_update_8002(&$sandbox) {
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+  $entity_manager = \Drupal::entityManager();
+  $entity_type = 'paragraph';
+  $fields = ['grid'];
+  foreach ($fields as $field) {
+    $definition = $entity_manager->getFieldStorageDefinitions($entity_type)[$field];
+    $entity_manager->onFieldStorageDefinitionCreate($definition);
+  }
+}
+
 
