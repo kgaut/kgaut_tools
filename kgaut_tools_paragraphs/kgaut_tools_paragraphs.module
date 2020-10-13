@@ -46,7 +46,7 @@ function kgaut_tools_paragraphs_entity_base_field_info(\Drupal\Core\Entity\Entit
         '10_2' => '83% - 17% (10/12 - 2/12)',
         '2_10' => '17% - 83% (2/12 - 10/12)',
       ])
-      ->setDefaultValue('50_50')
+      ->setDefaultValue('6_6')
       ->setRequired(TRUE)
       ->setDisplayConfigurable('form', TRUE);
   }

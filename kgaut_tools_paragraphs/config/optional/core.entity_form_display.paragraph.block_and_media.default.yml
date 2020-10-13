@@ -16,7 +16,7 @@ bundle: block_and_media
 mode: default
 content:
   field_block:
-    weight: 1
+    weight: 2
     settings:
       plugin_id: ''
       settings: {  }
@@ -25,7 +25,7 @@ content:
     type: block_field_default
     region: content
   field_media:
-    weight: 2
+    weight: 3
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -34,6 +34,12 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  grid:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   layout:
     type: options_select
     weight: 0
