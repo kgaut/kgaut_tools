@@ -14,6 +14,7 @@ function kgaut_tools_paragraphs_preprocess_paragraph(&$variables) {
       $contentItem['#weight'] = $weight--;
     }
   }
+  $variables['grid'] = $paragraph->get('grid')->value;
 }
 
 function kgaut_tools_paragraphs_theme_suggestions_paragraph_alter(array &$suggestions, array $variables) {
