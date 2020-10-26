@@ -1,0 +1,48 @@
+uuid: 911be89c-afa6-4523-9e4e-237e6e7ec559
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.block_double.field_block
+    - field.field.paragraph.block_double.field_block_2
+    - paragraphs.paragraphs_type.block_double
+  module:
+    - block_field
+id: paragraph.block_double.default
+targetEntityType: paragraph
+bundle: block_double
+mode: default
+content:
+  field_block:
+    weight: 3
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+    type: block_field_default
+    region: content
+  field_block_2:
+    weight: 4
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+    type: block_field_default
+    region: content
+  grid:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  layout:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

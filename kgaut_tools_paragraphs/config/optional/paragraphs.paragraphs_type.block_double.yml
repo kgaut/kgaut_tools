@@ -1,0 +1,10 @@
+uuid: 946c6fa8-a307-47b9-a4d1-c2a7344237a7
+langcode: fr
+status: true
+dependencies: {  }
+id: block_double
+label: 'Block double'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }
