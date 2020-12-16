@@ -4,14 +4,14 @@
  * Implements hook_install().
  */
 function kgaut_tools_paragraphs_install($is_syncing) {
-  kgaut_tools_paragraphs_update_8001();
-  kgaut_tools_paragraphs_update_8002();
+  kgaut_tools_paragraphs_update_8001([]);
+  kgaut_tools_paragraphs_update_8002([]);
 }
 
 /**
  * Create basefield paragraph.layout
  */
-function kgaut_tools_paragraphs_update_8001(&$sandbox) {
+function kgaut_tools_paragraphs_update_8001(&$sandbox = []) {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
   $entity_manager = \Drupal::entityManager();
   $entity_type = 'paragraph';
@@ -25,7 +25,7 @@ function kgaut_tools_paragraphs_update_8001(&$sandbox) {
 /**
  * Create basefield paragraph.grid
  */
-function kgaut_tools_paragraphs_update_8002(&$sandbox) {
+function kgaut_tools_paragraphs_update_8002(&$sandbox = []) {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
   $entity_manager = \Drupal::entityManager();
   $entity_type = 'paragraph';
