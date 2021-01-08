@@ -12,7 +12,7 @@ function kgaut_tools_paragraphs_install($is_syncing) {
  * Create basefield paragraph.layout
  */
 function kgaut_tools_paragraphs_update_8001(&$sandbox = []) {
-  $entity_type = 'paragraph';
+  $entity_type_id = 'paragraph';
   $fields = ['layout'];
 
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
@@ -28,7 +28,7 @@ function kgaut_tools_paragraphs_update_8001(&$sandbox = []) {
  * Create basefield paragraph.grid
  */
 function kgaut_tools_paragraphs_update_8002(&$sandbox = []) {
-  $entity_type = 'paragraph';
+  $entity_type_id = 'paragraph';
   $fields = ['grid'];
 
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
