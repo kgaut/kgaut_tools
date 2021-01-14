@@ -4,8 +4,6 @@
  * Implements hook_install().
  */
 function kgaut_tools_paragraphs_install($is_syncing) {
-  kgaut_tools_paragraphs_update_8001();
-  kgaut_tools_paragraphs_update_8002();
 }
 
 /**
