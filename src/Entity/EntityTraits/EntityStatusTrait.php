@@ -8,6 +8,10 @@ trait EntityStatusTrait {
 
   public function isPublished() {
     return (bool) $this->getEntityKey('status');
+  }  
+  
+  public function isEnabled() {
+    return $this->isPublished();
   }
 
   public function setPublished($published) {
