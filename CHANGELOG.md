@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.3 27/01/2021
+ - EntityStatusTrait - add method isEnabled()
+ 
 # kgaut_tools 2.0.2 - 27/01/2021
  - Set dates configuration in a submodule.
 
