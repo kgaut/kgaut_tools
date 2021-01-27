@@ -1,5 +1,9 @@
 # kgaut_tools 2.0.x-dev
 
+
+# kgaut_tools 2.0.4 27/01/2021
+- EntityStatusTrait - add method setStatus($status)
+
 # kgaut_tools 2.0.3 27/01/2021
  - EntityStatusTrait - add method isEnabled()
  
