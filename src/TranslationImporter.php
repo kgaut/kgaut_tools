@@ -26,10 +26,14 @@ class TranslationImporter {
   /**
    * Constructs a new TranslationImporter object.
    */
-  public function __construct(StringStorageInterface $locale_storage, LanguageManagerInterface $languageManager) {
-    $this->localeStorage = $locale_storage;
-    $this->languageManager = $languageManager;
-  }
+   public function __construct(StringStorageInterface $locale_storage, LanguageManagerInterface $languageManager) {
+     $this->languageManager = $languageManager;
+     if(!\Drupal::moduleHandler()->moduleExists('locale')) {
+       \Drupal::messenger()->addError(t('Module Locale has to be enabled.'));
+       \Drupal::logger('kgaut_tools')->error(t('Module Locale is not enabled.'));
+     }
+     $this->localeStorage = \Drupal::service('locale.storage');
+   }
 
   public function importTranslation($source, $langcode, $translation) {
     if(!$this->isLangcodeValid($langcode)) {
