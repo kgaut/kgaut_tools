@@ -14,6 +14,11 @@ trait EntityStatusTrait {
     return $this->isPublished();
   }
 
+  public function setStatus($status) {
+    $this->setPublished($status);
+    return $this;
+  }
+  
   public function setPublished($published) {
     $this->set('status', $published ? TRUE : FALSE);
     return $this;
