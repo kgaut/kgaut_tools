@@ -7,7 +7,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 trait EntityStatusTrait {
 
   public function isPublished() {
-    return (bool) $this->getEntityKey('status');
+    return (bool) $this->get('status')->value;
   }  
   
   public function isEnabled() {
