@@ -5,3 +5,14 @@ field.formatter.settings.string_title:
     tag:
       type: string
       label: Tag
+
+field.formatter.settings.link_button:
+  type: mapping
+  label: Button formatter settings
+  mapping:
+    label:
+      type: string
+      label: Button label
+    classes:
+      type: string
+      label: Classes
