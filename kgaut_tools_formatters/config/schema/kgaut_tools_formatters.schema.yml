@@ -1,0 +1,7 @@
+field.formatter.settings.string_title:
+  type: mapping
+  label: Title formatter settings
+  mapping:
+    tag:
+      type: string
+      label: Tag
