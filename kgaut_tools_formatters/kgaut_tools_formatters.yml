@@ -1,0 +1,5 @@
+name: Kgaut Tools Field Formatters
+type: module
+description: Add custom formatters for basic fields
+core_version_requirement: ^8 || ^9
+package: Kgaut Tools

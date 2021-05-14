@@ -1,4 +1,5 @@
 # kgaut_tools 2.0.x-dev
+- Add new submodule kgaut_tools_formatters
 
 # kgaut_tools 2.0.5 27/01/2021
 - EntityStatusTrait - fix method isPublished()
@@ -8,7 +9,7 @@
 
 # kgaut_tools 2.0.3 27/01/2021
  - EntityStatusTrait - add method isEnabled()
- 
+
 # kgaut_tools 2.0.2 - 27/01/2021
  - Set dates configuration in a submodule.
 
