@@ -2,6 +2,7 @@
 - Add new submodule kgaut_tools_formatters
 - kgaut_tools_formatters - Add StringTitleFormatter
 - kgaut_tools_formatters - Add LinkButtonFormatter
+- kgaut_tools_formatters - LinkButtonFormatter - Add target option
 
 # kgaut_tools 2.0.5 27/01/2021
 - EntityStatusTrait - fix method isPublished()

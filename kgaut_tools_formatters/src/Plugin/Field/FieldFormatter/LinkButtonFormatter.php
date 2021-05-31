@@ -28,6 +28,7 @@ class LinkButtonFormatter extends UriLinkFormatter {
     return [
       'classes' => 'button',
       'label' => t('See'),
+      'target' => NULL,
     ] + parent::defaultSettings();
   }
 
@@ -49,6 +50,14 @@ class LinkButtonFormatter extends UriLinkFormatter {
       '#default_value' => $this->getSetting('classes'),
     ];
 
+    $elements['target'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Target'),
+      '#empty_option' => 'Undefined',
+      '#options' => ['_blank' => '_blank'],
+      '#default_value' => $this->getSetting('target'),
+    ];
+
     return $elements;
   }
 
@@ -59,6 +68,7 @@ class LinkButtonFormatter extends UriLinkFormatter {
     $summary = parent::settingsSummary();
     $summary[] = $this->t('Button label: @label', ['@label' => $this->getSetting('label')]);
     $summary[] = $this->t('Classes: @classes', ['@classes' => $this->getSetting('classes')]);
+    $summary[] = $this->t('Target: @target', ['@target' => $this->getSetting('target') ?? 'Undefined']);
     return $summary;
   }
 
@@ -77,6 +87,9 @@ class LinkButtonFormatter extends UriLinkFormatter {
             'class' => explode(' ', $settings['classes']),
           ],
         ];
+        if (isset($settings['target'])) {
+          $elements[$delta]['#attributes']['target'] = $settings['target'];
+        }
       }
     }
 
