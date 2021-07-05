@@ -26,6 +26,10 @@ trait EntityChangedTrait {
     return $changed;
   }
 
+  public function getChangedTimeFormatted($format = 'short') {
+    return \Drupal::service('date.formatter')->format($this->getChangedTime(), $format);
+  }
+  
   /**
    * Gets the timestamp of the last entity change for the current translation.
    *
