@@ -12,6 +12,10 @@ trait EntityCreatedTrait {
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
+  
+  public function getCreatedTimeFormatted($format = 'short') {
+    return \Drupal::service('date.formatter')->format($this->getCreatedTime(), $format);
+  }
 
   /**
    * {@inheritdoc}
