@@ -1,4 +1,7 @@
 # kgaut_tools 2.0.x-dev
+
+# kgaut_tools 2.0.6 05/07/2021
+- Add getChangedTimeFormatted() and getCreatedTimeFormatted()
 - Add new submodule kgaut_tools_formatters
 - kgaut_tools_formatters - Add StringTitleFormatter
 - kgaut_tools_formatters - Add LinkButtonFormatter
