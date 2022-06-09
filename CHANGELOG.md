@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.8 09/06/2022
+ - Drupal 9 compat
+
 # kgaut_tools 2.0.7 04/10/2021
  - define StringCleanerInterface
 

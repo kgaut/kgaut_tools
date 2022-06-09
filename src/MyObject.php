@@ -97,7 +97,7 @@ abstract class MyObject {
     if (isset($this->stage) && is_object($this->stage)) {
       $this->stage = json_encode($this->stage);
     }
-    $q = db_insert(static::$dbTableName);
+    $q = \Drupal::database()->insert(static::$dbTableName);
     $q->fields(get_object_vars($this));
     $this->{static::$dbTableIdentifier} = $q->execute();
     if (isset($this->data) && is_string($this->data)) {
@@ -106,7 +106,7 @@ abstract class MyObject {
     return is_numeric($this->{static::$dbTableIdentifier}) && $this->{static::$dbTableIdentifier} > 0;
   }
   private function update() {
-    $q = db_update(static::$dbTableName);
+    $q = \Drupal::database()->update(static::$dbTableName);
     if (isset($this->data) && is_object($this->data)) {
       $this->data = json_encode($this->data);
     }
@@ -126,7 +126,7 @@ abstract class MyObject {
     return $q->execute();
   }
   protected function load() {
-    $query = db_select(static::$dbTableName, 't');
+    $query = \Drupal::database()->select(static::$dbTableName, 't');
     $query->fields('t');
     $query->condition(static::$dbTableIdentifier, $this->{static::$dbTableIdentifier});
     $result = $query->execute()->fetchObject();
@@ -155,7 +155,7 @@ abstract class MyObject {
    */
   protected static function _load($conditions = array(), $asArray = FALSE) {
     $objectsArray = array();
-    $query = db_select(static::$dbTableName, 't');
+    $query = \Drupal::database()->select(static::$dbTableName, 't');
     $query->fields('t');
     foreach ($conditions as $cond) {
       $cond1 = $cond[0];
@@ -185,7 +185,7 @@ abstract class MyObject {
 
   public static function loadAll() {
     $steps = array();
-    $query = db_select(static::$dbTableName, 's');
+    $query = \Drupal::database()->select(static::$dbTableName, 's');
     $query->fields('s', array(static::$dbTableIdentifier));
     $result = $query->execute();
     while ($row = $result->fetchObject()) {
@@ -194,7 +194,7 @@ abstract class MyObject {
     return $steps;
   }
   public function delete() {
-    $q = db_delete(static::$dbTableName);
+    $q = \Drupal::database()->delete(static::$dbTableName);
     $q->condition(static::$dbTableIdentifier, $this->{static::$dbTableIdentifier});
     return $q->execute();
   }
