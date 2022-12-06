@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.9 06/12/2022
+ - Drupal 10 compat
+
 # kgaut_tools 2.0.8 09/06/2022
  - Drupal 9 compat
 
