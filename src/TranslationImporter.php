@@ -1,8 +1,6 @@
 <?php
 
 namespace Drupal\kgaut_tools;
-use Drupal\clearblue\Services\ClearblueLanguageManager;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\locale\StringStorageInterface;
 
