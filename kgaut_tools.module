@@ -15,23 +15,6 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {<?php
-
-/**
- * @file
- * Contains kgaut_tools.module.
- */
-
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\image\Entity\ImageStyle;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\file\FileInterface;
-use Drupal\Core\Url;
-
-/**
- * Implements hook_help().
- */
 function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Main module help for the kgaut_tools module.
