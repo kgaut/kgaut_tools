@@ -15,7 +15,177 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
+function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {<?php
+
+/**
+ * @file
+ * Contains kgaut_tools.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\file\FileInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
 function kgaut_tools_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the kgaut_tools module.
+    case 'help.page.kgaut_tools':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Tools and services for drupal 8') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Generate all image styles once an Image is uploaded.
+ * Tip by flocondetoile.
+ *
+ * @see http://flocondetoile.fr/blog/generer-des-styles-d-images-automatiquement-avec-drupal-8
+ */
+
+function kgaut_tools_entity_insert(EntityInterface $entity) {
+  if (\Drupal::config('kgaut_tools.config')->get('disable_image_derivate') === 1) {
+    return;
+  }
+  /** @var \Drupal\file\Entity\File $entity */
+  if ($entity instanceof FileInterface) {
+    $image = \Drupal::service('image.factory')->get($entity->getFileUri());
+    /** @var \Drupal\Core\Image\Image $image */
+    if ($image->isValid()) {
+      $styles = ImageStyle::loadMultiple();
+      $image_uri = $entity->getFileUri();
+      /** @var \Drupal\image\Entity\ImageStyle $style */
+      foreach ($styles as $style) {
+        $destination = $style->buildUri($image_uri);
+        $style->createDerivative($image_uri, $destination);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess().
+ *
+ * Add custom variable to all templates.
+ */
+function kgaut_tools_preprocess(&$variables, $hook) {
+  $isHttps = \Drupal::request()->isSecure() || \Drupal::service('settings')->get('force_https');
+  $variables['basepath'] = base_path();
+  $variables['baseurl_front'] = Url::fromRoute('<front>', [], ['absolute' => TRUE, 'https' => $isHttps])->toString();
+  $variables['pathtotheme'] = base_path() . \Drupal::service('extension.list.theme')->getPathname('theme', \Drupal::theme()->getActiveTheme()->getName());
+  $variables['path_default_theme'] = base_path() . \Drupal::service('extension.list.theme')->getPathname('theme', \Drupal::config('system.theme')->get('default'));
+  $variables['baseurl_theme'] = $variables['baseurl_front'] . \Drupal::service('extension.list.theme')->getPathname('theme', \Drupal::theme()->getActiveTheme()->getName());
+  $variables['baseurl_default_theme'] = $variables['baseurl_front'] . \Drupal::service('extension.list.theme')->getPathname('theme', \Drupal::config('system.theme')->get('default'));
+  $variables['pathtotfiles'] = PublicStream::basePath();
+  $variables['baseurl_files'] = $variables['baseurl_front'] . PublicStream::basePath();
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function kgaut_tools_form_system_performance_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $form['caching']['page_cache_maximum_age']['#options'] += [
+    172800 => '2 days',
+    345600 => '4 days',
+    432000 => '5 days',
+    864000 => '10 days',
+    1728000 => '20 days',
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Add custom variables to DrupalSettings.
+ */
+function kgaut_tools_page_attachments(array &$attachments) {
+  $attachments['#attached']['drupalSettings']['basepath'] = base_path();
+  $attachments['#attached']['drupalSettings']['pathtotheme'] = base_path() . \Drupal::service('extension.list.theme')->getPathname('theme', \Drupal::theme()->getActiveTheme()->getName());
+  $attachments['#attached']['drupalSettings']['pathtotfiles'] = PublicStream::basePath();
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * Add custom variables to DrupalSettings.
+ */
+function kgaut_tools_theme_suggestions_user(array $variables) {
+  $suggestions = [];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * Add custom variables to DrupalSettings.
+ */
+function kgaut_tools_theme_suggestions_node(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\node\Entity\Node $node */
+  $node = $variables['elements']['#node'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
+  $bundle = $node->bundle();
+  $sanitized_bundle = strtr($bundle, '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_bundle;
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_bundle . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ */
+function kgaut_tools_theme_suggestions_taxonomy_term(array $variables) {
+  $suggestions = [];
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  $term = $variables['elements']['#taxonomy_term'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_view_mode;
+  $bundle = $term->bundle();
+  $sanitized_bundle = strtr($bundle, '.', '_');
+  $suggestions[] = $variables['theme_hook_original'] . '__' . $sanitized_bundle . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * Add view mode to page based on view bundle.
+ */
+function kgaut_tools_theme_suggestions_page(array $variables) {
+  $suggestions = [];
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.node.canonical') {
+    $bundle = \Drupal::routeMatch()->getParameter('node')->bundle();
+    $suggestions[] = $variables['theme_hook_original'] . '__node__' . $bundle;
+  }
+  return $suggestions;
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Dispatch UserLoginEvent::kgaut_tools_user_login
+ */
+function kgaut_tools_user_login($account) {
+  $event = new \Drupal\kgaut_tools\Event\UserLoginEvent($account);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event::EVENT_NAME, $event);
+}
+
   switch ($route_name) {
     // Main module help for the kgaut_tools module.
     case 'help.page.kgaut_tools':
