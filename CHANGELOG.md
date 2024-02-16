@@ -1,6 +1,9 @@
 # kgaut_tools 2.0.x-dev
 
 # kgaut_tools 2.0.12 18/01/2024
+ - fix(drupal10): fix Drupal\kgaut_tools\Event\UserLoginEvent
+
+# kgaut_tools 2.0.12 18/01/2024
  - fix(drupal10): compat and deprecated
 
 # kgaut_tools 2.0.9 06/12/2022
