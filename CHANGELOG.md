@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.14 20/02/2024
+ - fix(drupal10): fix Drupal\kgaut_tools\Event\UserLoginEvent dispatch
+
 # kgaut_tools 2.0.13 16/02/2024
  - fix(drupal10): fix Drupal\kgaut_tools\Event\UserLoginEvent
 

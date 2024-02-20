@@ -165,6 +165,7 @@ function kgaut_tools_theme_suggestions_page(array $variables) {
  */
 function kgaut_tools_user_login($account) {
   $event = new \Drupal\kgaut_tools\Event\UserLoginEvent($account);
+  /** @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher */
   $event_dispatcher = \Drupal::service('event_dispatcher');
-  $event_dispatcher->dispatch($event::EVENT_NAME, $event);
+  $event_dispatcher->dispatch($event, $event::EVENT_NAME);
 }
