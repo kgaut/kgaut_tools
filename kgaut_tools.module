@@ -67,8 +67,8 @@ function kgaut_tools_preprocess(&$variables, $hook) {
   $variables['basepath'] = base_path();
   $variables['baseurl_front'] = Url::fromRoute('<front>', [], ['absolute' => TRUE, 'https' => $isHttps])->toString();
   $variables['pathtotheme'] = base_path() . \Drupal::service('extension.list.theme')->getPathname(\Drupal::theme()->getActiveTheme()->getName());
-  $variables['path_default_theme'] = base_path() . \Drupal::service('extension.list.theme')->getPathname(\Drupal::config('system.theme')->get('default'));
-  $variables['baseurl_theme'] = $variables['baseurl_front'] . \Drupal::service('extension.list.theme')->getPathname(\Drupal::theme()->getActiveTheme()->getName());
+  $variables['path_default_theme'] = base_path() . \Drupal::service('extension.list.theme')->getPathname(\Drupal::config('system.theme')->get('default'));  
+  $variables['baseurl_theme'] = $variables['baseurl_front'] . '/' . $theme->getPath() . '/';
   $variables['baseurl_default_theme'] = $variables['baseurl_front'] . \Drupal::service('extension.list.theme')->getPathname(\Drupal::config('system.theme')->get('default'));
   $variables['pathtotfiles'] = PublicStream::basePath();
   $variables['baseurl_files'] = $variables['baseurl_front'] . PublicStream::basePath();
