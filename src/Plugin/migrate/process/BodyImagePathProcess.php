@@ -5,6 +5,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
+use Drupal\file\FileRepositoryInterface;
 /**
  * @MigrateProcessPlugin(
  *   id = "body_image_path_process"
@@ -91,7 +92,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
             if (!$file_contents || empty($file_contents)) {
               \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
             }
-            elseif ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
+            elseif ($file = FileRepositoryInterface::writeData($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
               $sources[$i] = 'src="' . $filepath;
               $destinations[$i] = 'src="' . $uri_destination;
               $sources[$i * 1000] = 'src=\'' . $filepath;
@@ -168,7 +169,7 @@ class BodyImagePathProcess extends ProcessPluginBase {
           if (!$file_contents || empty($file_contents)) {
             \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
           }
-          elseif ($file = file_save_data($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
+          elseif ($file = FileRepositoryInterface($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
             $sources[$i] = 'href="' . $filepath;
             $destinations[$i] = 'href="' . $uri_destination;
             $sources[$i * 1000] = 'href=\'' . $filepath;
