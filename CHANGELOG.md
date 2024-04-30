@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.19 30/04/2024
+ - fix(preprocess): var pathtotheme and baseurl_default_theme
+
 # kgaut_tools 2.0.14 20/02/2024
  - fix(drupal10): fix Drupal\kgaut_tools\Event\UserLoginEvent dispatch
 
