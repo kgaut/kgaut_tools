@@ -41,13 +41,14 @@ class TranslationImporter {
       return;
     }
     $strings = $this->localeStorage->getStrings(['source' => $source]);
+    if(count($strings) === 0) {
+      $string = new \Drupal\locale\SourceString();
+      $string->setString($source);
+      $string->setStorage($this->localeStorage);
+      $string->save();
+      $strings = [$string];
+    }
     foreach ($strings as $string) {
-      if(!$string) {
-        $string = new \Drupal\locale\SourceString();
-        $string->setString($source);
-        $string->setStorage($this->localeStorage);
-        $string->save();
-      }
       if(trim($translation) === '') {
         continue;
       }

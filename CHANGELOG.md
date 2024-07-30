@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.21 30/07/2024
+ - feat(translation-importer): allow to create string if not existing yet
+
 # kgaut_tools 2.0.20 30/07/2024
  - fix(translation-importer): service definition
 
