@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.20 30/07/2024
+ - fix(translation-importer): service definition
+
 # kgaut_tools 2.0.19 30/04/2024
  - fix(preprocess): var pathtotheme and baseurl_default_theme
 

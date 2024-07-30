@@ -9,4 +9,4 @@ services:
 
   kgaut_tools.translation_importer:
     class: Drupal\kgaut_tools\TranslationImporter
-    arguments: ['@language_manager']
+    arguments: ['@locale.storage', '@language_manager']
