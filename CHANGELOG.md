@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.22 21/08/2024
+ - feat(drupal11): make module drupal 11 ready
+
 # kgaut_tools 2.0.21 30/07/2024
  - feat(translation-importer): allow to create string if not existing yet
 
