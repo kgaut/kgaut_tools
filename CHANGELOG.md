@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.23 05/09/2024
+ - fix(info): missing dependencies
+
 # kgaut_tools 2.0.22 21/08/2024
  - feat(drupal11): make module drupal 11 ready
 
