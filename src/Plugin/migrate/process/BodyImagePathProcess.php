@@ -1,188 +1,211 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools\Plugin\migrate\process;
 
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\Row;
 use Drupal\file\FileRepositoryInterface;
+use Drupal\kgaut_tools\StringCleanerInterface;
+use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\ProcessPluginBase;
+use Drupal\migrate\Row;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
+ * Rewrites image and asset URLs found in HTML during migrations.
+ *
  * @MigrateProcessPlugin(
  *   id = "body_image_path_process"
  * )
  */
-class BodyImagePathProcess extends ProcessPluginBase {
+final class BodyImagePathProcess extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Attributes whose URLs should be rewritten.
+   */
+  private const REWRITTEN_ATTRIBUTES = ['src', 'href'];
+
+  public function __construct(
+    array $configuration,
+    string $plugin_id,
+    array $plugin_definition,
+    private readonly StringCleanerInterface $stringCleaner,
+    private readonly FileSystemInterface $fileSystem,
+    private readonly FileRepositoryInterface $fileRepository,
+    private readonly LoggerChannelInterface $logger,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
   /**
    * {@inheritdoc}
    */
-  public function transform($html, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    // Values for the following variables are specified in the YAML file above.
-    $destination = $this->configuration['images_destination'];
-    $url_source = $this->configuration['url_source'];
-    $images_source = $this->configuration['images_source'];
-    $replace = isset($this->configuration['replace']) ? (bool) $this->configuration['replace'] : FALSE;
-    $rename = isset($this->configuration['rename']) ? (bool) $this->configuration['rename'] : FALSE;
-    $auth = isset($this->configuration['auth']) ? $this->configuration['auth'] : FALSE;
-    $url_to_replace = isset($this->configuration['url_to_replace']) ? $this->configuration['url_to_replace'] : FALSE;
-    $html = self::parseTexte($html, $images_source, $url_source, $destination, $row, $replace, $rename, $auth, $url_to_replace);
-
-    return $html;
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+  ): self {
+    return new self(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('kgaut_tools.stringcleaner'),
+      $container->get('file_system'),
+      $container->get('file.repository'),
+      $container->get('logger.channel.kgaut_tools'),
+    );
   }
 
-  public static function parseTexte($html, $images_source, $url_source, $destination, Row $row, $replace = FALSE, $rename = FALSE, $auth = FALSE, $url_to_replace = FALSE) {
-    /** @var \Drupal\kgaut_tools\StringCleaner $stringCleaner */
-    $stringCleaner = \Drupal::service('kgaut_tools.stringcleaner');
-    preg_match_all('/<img[^>]+>/i', $html, $result);
-    $sources = [];
-    $destinations = [];
-    if (!empty($result[0])) {
-      $i = 0;
-      foreach ($result as $img_tags) {
-        foreach ($img_tags as $img_tag) {
-          $i++;
-          preg_match_all('/(src)=("[^"]*")/i', $img_tag, $tag_attributes);
-          if (!empty($tag_attributes[2][0])) {
-            $filepath = str_replace('"', '', $tag_attributes[2][0]);
-            // Create file object from a locally copied file.
-            $pathinfos = pathinfo($filepath);
-            $filename = $pathinfos['basename'];
-            if (strpos($filename, '?') > 0) {
-              $filename = substr($filename, 0, strpos($filename, '?'));
-            }
-            $path = $pathinfos['dirname'];
-            if($rename) {
-              $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
-              $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
-            }
-            else {
-              $new_path = str_replace($images_source, '', $path);
-              $destination_finale = $destination . $new_path;
-              $filename_destination = urldecode($filename);
-            }
-            $new_destination = $destination_finale . '/' . $filename_destination;
-            $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
-            if(file_exists($new_destination) && !$replace) {
-              $sources[$i] = 'src="' . $filepath;
-              $destinations[$i] = 'src="' . $uri_destination;
-              $sources[$i * 1000] = 'src=\'' . $filepath;
-              $destinations[$i * 1000] = 'src=\'' . $uri_destination;
-              continue;
-            }
-            if (!file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
-              \Drupal::logger('migrate')->error(t('Error creating folder @folder', ['@folder' => $destination_finale]));
-              continue;
-            }
-            if (filter_var($filepath, FILTER_VALIDATE_URL)) {
-              $context = NULL;
-              if($auth) {
-                $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
-              }
-              if($url_to_replace) {
-                $filepath = str_replace($url_to_replace, $url_source, $filepath);
-              }
-              $file_contents = file_get_contents($filepath, FALSE, $context);
-            }
-            else {
-              $context = NULL;
-              if($auth) {
-                $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
-              }
-              $file_contents = file_get_contents($url_source . $filepath, FALSE, $context);
-            }
-            if (!$file_contents || empty($file_contents)) {
-              \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
-            }
-            elseif ($file = FileRepositoryInterface::writeData($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
-              $sources[$i] = 'src="' . $filepath;
-              $destinations[$i] = 'src="' . $uri_destination;
-              $sources[$i * 1000] = 'src=\'' . $filepath;
-              $destinations[$i * 1000] = 'src=\'' . $uri_destination;
-            }
-            else {
-              \Drupal::logger('migrate')->error(t('Error saving file @file', ['@file' => $new_destination]));
-            }
-          }
-        }
-      }
-      $html = str_replace($sources, $destinations, $html);
+  /**
+   * {@inheritdoc}
+   */
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    if (!is_string($value) || $value === '') {
+      return $value;
     }
 
-    $result = NULL;
-    //<a[^>\/]+(\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))[.]+
-    preg_match_all('/(href=")([^".]*).*?(:png|jpg|jpeg|gif|png|svg)(")/mi', $html, $result);
-    if(!empty($result[2])) {
-      $i = 0;
-      $sources = [];
-      $destinations = [];
-      foreach ($result[2] as $key => $img) {
-        $i++;
-        $img = $img . '.' . $result[3][$key];
-        if (strpos($img, '/') === 0) {
-          $filepath = $img;
-          // Create file object from a locally copied file.
-          $pathinfos = pathinfo($filepath);
-          $filename = $pathinfos['basename'];
-
-          if (strpos($filename, '?') > 0) {
-            $filename = substr($filename, 0, strpos($filename, '?'));
-          }
-          $path = $pathinfos['dirname'];
-          if($rename) {
-            $destination_finale = $destination . $stringCleaner->clean($row->getSourceProperty('title'));
-            $filename_destination = $stringCleaner->clean($row->getSourceProperty('title')) . '-' . urldecode($filename);
-          }
-          else {
-            $new_path = str_replace($images_source, '', $path);
-            $destination_finale = $destination . $new_path;
-            $filename_destination = urldecode($filename);
-          }
-          $new_destination = $destination_finale . '/' . $filename_destination;
-          $uri_destination = str_replace('public://', '/' . PublicStream::basePath() . '/', $new_destination);
-          if(file_exists($new_destination) && !$replace) {
-            $sources[$i] = 'href="' . $filepath;
-            $destinations[$i] = 'href="' . $uri_destination;
-            $sources[$i * 1000] = 'href=\'' . $filepath;
-            $destinations[$i * 1000] = 'href=\'' . $uri_destination;
-            continue;
-          }
-          if (!file_prepare_directory($destination_finale, FILE_CREATE_DIRECTORY)) {
-            \Drupal::logger('migrate')->error(t('Error creating folder @folder', ['@folder' => $destination_finale]));
-            continue;
-          }
-          if (filter_var($filepath, FILTER_VALIDATE_URL)) {
-            $context = NULL;
-            if($auth) {
-              $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
-            }
-            if($url_to_replace) {
-              $filepath = str_replace($url_to_replace, $url_source, $filepath);
-            }
-            $file_contents = file_get_contents($filepath, FALSE, $context);
-          }
-          else {
-            $context = NULL;
-            if($auth) {
-              $context = stream_context_create(['http' => ['header'  => 'Authorization: Basic ' . $auth]]);
-            }
-            $file_contents = file_get_contents($url_source . $filepath, FALSE, $context);
-          }
-          if (!$file_contents || empty($file_contents)) {
-            \Drupal::logger('migrate')->error(t('Error getting content of remote file @file', ['@file' => $file_contents]));
-          }
-          elseif ($file = FileRepositoryInterface($file_contents, $new_destination, FILE_EXISTS_REPLACE)) {
-            $sources[$i] = 'href="' . $filepath;
-            $destinations[$i] = 'href="' . $uri_destination;
-            $sources[$i * 1000] = 'href=\'' . $filepath;
-            $destinations[$i * 1000] = 'href=\'' . $uri_destination;
-          }
-          else {
-            \Drupal::logger('migrate')->error(t('Error saving file @file', ['@file' => $new_destination]));
-          }
-        }
-      }
-      $html = str_replace($sources, $destinations, $html);
+    foreach (self::REWRITTEN_ATTRIBUTES as $attribute) {
+      $value = $this->rewriteAssets($value, $row, $attribute);
     }
-
-    return $html;
+    return $value;
   }
+
+  /**
+   * Rewrites either <img src="..."> or <a href="..."> URLs in the markup.
+   */
+  private function rewriteAssets(string $html, Row $row, string $attribute): string {
+    $sources = $this->extractAssets($html, $attribute);
+    if ($sources === []) {
+      return $html;
+    }
+
+    $replacements = [];
+    foreach ($sources as $filepath) {
+      $public_uri = $this->processAsset($filepath, $row);
+      if ($public_uri === NULL) {
+        continue;
+      }
+      $replacements[$attribute . '="' . $filepath] = $attribute . '="' . $public_uri;
+      $replacements[$attribute . "='" . $filepath] = $attribute . "='" . $public_uri;
+    }
+
+    return $replacements === [] ? $html : strtr($html, $replacements);
+  }
+
+  /**
+   * Extracts the unique list of URLs to rewrite for the given attribute.
+   *
+   * @return string[]
+   */
+  private function extractAssets(string $html, string $attribute): array {
+    $found = [];
+
+    if ($attribute === 'src') {
+      preg_match_all('/<img[^>]+>/i', $html, $tags);
+      foreach (($tags[0] ?? []) as $tag) {
+        if (preg_match('/src=("[^"]*"|\'[^\']*\')/i', $tag, $attr)) {
+          $found[] = trim($attr[1], "\"'");
+        }
+      }
+    }
+    elseif ($attribute === 'href') {
+      preg_match_all('/href=("[^"]+\.(?:png|jpg|jpeg|gif|svg)"|\'[^\']+\.(?:png|jpg|jpeg|gif|svg)\')/i', $html, $tags);
+      foreach (($tags[1] ?? []) as $value) {
+        $found[] = trim($value, "\"'");
+      }
+    }
+
+    return array_values(array_unique(array_filter($found)));
+  }
+
+  /**
+   * Downloads and writes a single asset, returning its new public URI.
+   */
+  private function processAsset(string $filepath, Row $row): ?string {
+    $destination_root = (string) ($this->configuration['images_destination'] ?? 'public://');
+    $images_source = (string) ($this->configuration['images_source'] ?? '');
+    $url_source = (string) ($this->configuration['url_source'] ?? '');
+    $replace = (bool) ($this->configuration['replace'] ?? FALSE);
+    $rename = (bool) ($this->configuration['rename'] ?? FALSE);
+    $auth = $this->configuration['auth'] ?? FALSE;
+    $url_to_replace = $this->configuration['url_to_replace'] ?? FALSE;
+
+    $pathinfo = pathinfo($filepath);
+    $filename = $pathinfo['basename'];
+    if (($qpos = strpos($filename, '?')) !== FALSE) {
+      $filename = substr($filename, 0, $qpos);
+    }
+    $path = $pathinfo['dirname'] ?? '';
+
+    if ($rename) {
+      $title_clean = $this->stringCleaner->clean((string) $row->getSourceProperty('title'));
+      $destination_dir = $destination_root . $title_clean;
+      $destination_filename = $title_clean . '-' . urldecode($filename);
+    }
+    else {
+      $destination_dir = $destination_root . str_replace($images_source, '', $path);
+      $destination_filename = urldecode($filename);
+    }
+
+    $destination = $destination_dir . '/' . $destination_filename;
+    $public_uri = str_replace('public://', '/' . PublicStream::basePath() . '/', $destination);
+
+    if (file_exists($destination) && !$replace) {
+      return $public_uri;
+    }
+
+    if (!$this->fileSystem->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY)) {
+      $this->logger->error('Error creating folder @folder', ['@folder' => $destination_dir]);
+      return NULL;
+    }
+
+    $contents = $this->fetchContents($filepath, $url_source, $url_to_replace, $auth);
+    if ($contents === NULL) {
+      $this->logger->error('Error getting content of remote file @file', ['@file' => $filepath]);
+      return NULL;
+    }
+
+    try {
+      $this->fileRepository->writeData($contents, $destination, FileSystemInterface::EXISTS_REPLACE);
+      return $public_uri;
+    }
+    catch (\Throwable $exception) {
+      $this->logger->error('Error saving file @file: @message', [
+        '@file' => $destination,
+        '@message' => $exception->getMessage(),
+      ]);
+      return NULL;
+    }
+  }
+
+  /**
+   * Fetches the remote contents for an asset, returning NULL on failure.
+   */
+  private function fetchContents(string $filepath, string $url_source, string|false $url_to_replace, string|false $auth): ?string {
+    $context = NULL;
+    if (is_string($auth) && $auth !== '') {
+      $context = stream_context_create([
+        'http' => ['header' => 'Authorization: Basic ' . $auth],
+      ]);
+    }
+
+    if (filter_var($filepath, FILTER_VALIDATE_URL)) {
+      if (is_string($url_to_replace) && $url_to_replace !== '') {
+        $filepath = str_replace($url_to_replace, $url_source, $filepath);
+      }
+      $url = $filepath;
+    }
+    else {
+      $url = $url_source . $filepath;
+    }
+
+    $contents = @file_get_contents($url, FALSE, $context);
+    return ($contents === FALSE || $contents === '') ? NULL : $contents;
+  }
+
 }

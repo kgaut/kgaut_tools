@@ -1,41 +1,56 @@
 <?php
 
 /**
- * Implements hook_install().
+ * @file
+ * Install, update and uninstall hooks for kgaut_tools_paragraphs.
  */
-function kgaut_tools_paragraphs_install($is_syncing) {
+
+declare(strict_types=1);
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Installs the paragraph.layout base field.
+ */
+function kgaut_tools_paragraphs_update_8001(array &$sandbox = []): void {
+  _kgaut_tools_paragraphs_install_base_field('layout', BaseFieldDefinition::create('list_string')
+    ->setLabel(t('Layout'))
+    ->setSetting('allowed_values', [
+      'normal' => 'Current',
+      'reverse' => 'Reverse',
+    ])
+    ->setDefaultValue('normal')
+    ->setRequired(TRUE)
+    ->setDisplayConfigurable('form', TRUE)
+  );
 }
 
 /**
- * Create basefield paragraph.layout
+ * Installs the paragraph.grid base field.
  */
-function kgaut_tools_paragraphs_update_8001(&$sandbox = []) {
-  $entity_type_id = 'paragraph';
-  $fields = ['layout'];
-
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  \Drupal::entityTypeManager()->clearCachedDefinitions();
-  $entity_type = $definition_update_manager->getEntityType($entity_type_id);
-  foreach ($fields as $field) {
-    $fieldDefinition = $entity_type->getClass()::baseFieldDefinitions($entity_type)[$field];
-    $definition_update_manager->installFieldStorageDefinition($field, $entity_type_id, $entity_type_id, $fieldDefinition);
-  }
+function kgaut_tools_paragraphs_update_8002(array &$sandbox = []): void {
+  _kgaut_tools_paragraphs_install_base_field('grid', BaseFieldDefinition::create('list_string')
+    ->setLabel(t('Grid'))
+    ->setSetting('allowed_values', [
+      '6_6' => 'Equal size (6/12 - 6/12)',
+      '7_5' => '60% - 40% (7/12 - 5/12)',
+      '5_7' => '40% - 60% (5/12 - 7/12)',
+      '8_4' => '66% - 33% (8/12 - 4/12)',
+      '4_8' => '33% - 66% (4/12 - 8/12)',
+      '10_2' => '83% - 17% (10/12 - 2/12)',
+      '2_10' => '17% - 83% (2/12 - 10/12)',
+    ])
+    ->setDefaultValue('6_6')
+    ->setRequired(TRUE)
+    ->setDisplayConfigurable('form', TRUE)
+  );
 }
 
 /**
- * Create basefield paragraph.grid
+ * Installs a paragraph base field definition via the update manager.
  */
-function kgaut_tools_paragraphs_update_8002(&$sandbox = []) {
-  $entity_type_id = 'paragraph';
-  $fields = ['grid'];
-
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+function _kgaut_tools_paragraphs_install_base_field(string $field_name, BaseFieldDefinition $definition): void {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
-  $entity_type = $definition_update_manager->getEntityType($entity_type_id);
-  foreach ($fields as $field) {
-    $fieldDefinition = $entity_type->getClass()::baseFieldDefinitions($entity_type)[$field];
-    $definition_update_manager->installFieldStorageDefinition($field, $entity_type_id, $entity_type_id, $fieldDefinition);
-  }
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition($field_name, 'paragraph', 'kgaut_tools_paragraphs', $definition);
 }
-
-

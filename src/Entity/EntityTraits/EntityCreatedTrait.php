@@ -1,35 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools\Entity\EntityTraits;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 
+/**
+ * Provides helpers for entities holding a "created" timestamp field.
+ */
 trait EntityCreatedTrait {
 
   /**
-   * {@inheritdoc}
+   * Returns the entity creation timestamp.
    */
-  public function getCreatedTime() {
-    return $this->get('created')->value;
+  public function getCreatedTime(): int {
+    return (int) $this->get('created')->value;
   }
-  
-  public function getCreatedTimeFormatted($format = 'short') {
+
+  /**
+   * Returns the entity creation timestamp formatted for display.
+   */
+  public function getCreatedTimeFormatted(string $format = 'short'): string {
     return \Drupal::service('date.formatter')->format($this->getCreatedTime(), $format);
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the entity creation timestamp.
+   *
+   * @return $this
    */
-  public function setCreatedTime($timestamp) {
+  public function setCreatedTime(int $timestamp): static {
     $this->set('created', $timestamp);
     return $this;
   }
 
   /**
-   * @return BaseFieldDefinition
+   * Builds a base field definition for the "created" column.
    */
-  public static function baseFieldCreated($title = 'Created', $description = NULL) {
-    $field =  BaseFieldDefinition::create('created')->setLabel($title);
+  public static function baseFieldCreated(string $title = 'Created', ?string $description = NULL): BaseFieldDefinition {
+    $field = BaseFieldDefinition::create('created')->setLabel($title);
     if ($description !== NULL) {
       $field->setDescription($description);
     }

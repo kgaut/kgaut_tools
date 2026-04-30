@@ -1,0 +1,7 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Drupal\kgaut_tools_paragraphs\Hook\ParagraphsThemeHooks: ~
+  Drupal\kgaut_tools_paragraphs\Hook\ParagraphsEntityHooks: ~

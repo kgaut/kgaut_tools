@@ -1,4 +1,22 @@
 # kgaut_tools 2.0.x-dev
+ - refactor(hooks): convert procedural hooks to OOP using #[Hook] attributes,
+   grouped by theme under `src/Hook/` and `kgaut_tools_paragraphs/src/Hook/`
+ - refactor: modernise services and plugins for Drupal 10.3+/11 coding standards
+   (constructor property promotion, strict types, dependency injection, return
+   types, removal of `\Drupal::service()` lookups inside services)
+ - fix(formatter): `string_title` formatter no longer reads from a non-existent
+   `foo` setting
+ - fix(migrate): `body_image_path_process` no longer calls
+   `FileRepositoryInterface` as a function/static method; uses `file_system` and
+   `file.repository` services properly and avoids deprecated `file_prepare_directory()`
+ - fix(translation-importer): no longer overrides the injected locale storage
+   and removes a stray reference to an external `clearblue` namespace
+ - feat(ci): add Drupal coding standards (phpcs), PHPStan and PHPUnit
+   configuration files plus a GitHub Actions workflow running on push and pull
+   requests
+ - feat(tests): add PHPUnit unit tests for `StringCleaner`, `UserLoginEvent`,
+   `UserHooks`, `FormHooks`, `ParagraphsThemeHooks`
+ - chore(info): bump core compatibility to `^10.3 || ^11` and require PHP 8.1+
 
 # kgaut_tools 2.0.23 05/09/2024
  - fix(info): missing dependencies

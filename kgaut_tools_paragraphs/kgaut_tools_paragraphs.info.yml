@@ -1,9 +1,10 @@
 name: Kgaut Tools Paragraphs
 type: module
-description: Paragraphs presets
-core_version_requirement: ^8 || ^9 || ^10 || ^11
+description: 'Paragraphs presets and helpers.'
+core_version_requirement: ^10.3 || ^11
 package: Kgaut Tools
 dependencies:
-  - paragraphs
-  - media
-  - block_field
+  - kgaut_tools:kgaut_tools
+  - paragraphs:paragraphs
+  - drupal:media
+  - block_field:block_field

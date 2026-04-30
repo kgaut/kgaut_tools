@@ -1,0 +1,15 @@
+parameters:
+    level: 5
+    paths:
+        - .
+    excludePaths:
+        - vendor/*
+        - node_modules/*
+        - */config/*
+        - */templates/*
+    drupal:
+        entityMapping: []
+includes:
+    - vendor/mglaman/phpstan-drupal/extension.neon
+    - vendor/mglaman/phpstan-drupal/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon

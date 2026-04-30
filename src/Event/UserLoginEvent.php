@@ -1,32 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools\Event;
 
-use Drupal\user\UserInterface;
 use Drupal\Component\EventDispatcher\Event;
+use Drupal\user\UserInterface;
 
 /**
- * Event that is fired when a user logs in.
+ * Event that is dispatched when a user logs in.
  */
-class UserLoginEvent extends Event {
+final class UserLoginEvent extends Event {
 
-  const EVENT_NAME = 'kgaut_tools_user_login';
+  public const EVENT_NAME = 'kgaut_tools_user_login';
 
-  /**
-   * The user account.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  public $account;
-
-  /**
-   * Constructs the object.
-   *
-   * @param \Drupal\user\UserInterface $account
-   *   The account of the user logged in.
-   */
-  public function __construct(UserInterface $account) {
-    $this->account = $account;
-  }
+  public function __construct(public readonly UserInterface $account) {}
 
 }

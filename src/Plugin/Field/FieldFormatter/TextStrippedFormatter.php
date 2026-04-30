@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools\Plugin\Field\FieldFormatter;
+
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
-use Drupal\text\Plugin\Field\FieldFormatter\TextSummaryOrTrimmedFormatter;
 use Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter;
 
 /**
- * Plugin implementation of the 'text_summary_or_trimmed' formatter.
+ * Plugin implementation of the 'text_summary_or_trimmed_then_stripped' formatter.
  *
  * @FieldFormatter(
  *   id = "text_summary_or_trimmed_then_stripped",
@@ -22,38 +23,34 @@ use Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter;
  *   }
  * )
  */
-class TextStrippedFormatter extends TextTrimmedFormatter {
+final class TextStrippedFormatter extends TextTrimmedFormatter {
+
+  /**
+   * {@inheritdoc}
+   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    $element_info = \Drupal::service('element_info');
 
-    $render_as_summary = function (&$element) {
-      // Make sure any default #pre_render callbacks are set on the element,
-      // because text_pre_render_summary() must run last.
-      $element += \Drupal::service('element_info')->getInfo($element['#type']);
-      // Add the #pre_render callback that renders the text into a summary.
-      $element['#pre_render'][] = [TextTrimmedFormatter::class, 'preRenderSummary'];
-      // Pass on the trim length to the #pre_render callback via a property.
-      $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
-    };
-
-    // The ProcessedText element already handles cache context & tag bubbling.
-    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $delta => $item) {
-      $elements[$delta] = [
+      $is_summary = $this->getPluginId() === 'text_summary_or_trimmed_then_stripped'
+        && !empty($item->summary);
+      $text = $is_summary ? $item->summary : $item->value;
+
+      $element = [
         '#type' => 'processed_text',
-        '#text' => NULL,
+        '#text' => trim(str_replace('&nbsp;', '', strip_tags((string) $text))),
         '#format' => $item->format,
         '#langcode' => $item->getLangcode(),
       ];
-      if ($this->getPluginId() === 'text_summary_or_trimmed_then_stripped' && !empty($item->summary)) {
-        $elements[$delta]['#text'] = strip_tags($item->summary);
+
+      if (!$is_summary) {
+        $element += $element_info->getInfo($element['#type']);
+        $element['#pre_render'][] = [TextTrimmedFormatter::class, 'preRenderSummary'];
+        $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
       }
-      else {
-        $elements[$delta]['#text'] = strip_tags($item->value);
-        $render_as_summary($elements[$delta]);
-      }
-      $elements[$delta]['#text'] = trim($elements[$delta]['#text']);
-      $elements[$delta]['#text'] = str_replace('&nbsp;', '', $elements[$delta]['#text']);
+
+      $elements[$delta] = $element;
     }
 
     return $elements;
