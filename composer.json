@@ -14,17 +14,24 @@
     "license": "GPL-2.0+",
     "homepage": "https://github.com/kgaut/kgaut_tools",
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "support": {
         "issues": "https://github.com/kgaut/kgaut_tools/issues",
         "source": "https://github.com/kgaut/kgaut_tools/"
     },
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
     "require": {
         "php": ">=8.1",
-        "drupal/core": "^10.3 || ^11",
-        "drupal/pathauto": "*"
+        "drupal/pathauto": "^1.12"
     },
     "require-dev": {
         "drupal/coder": "^8.3 || ^9",
+        "drupal/core": "^10.3 || ^11",
         "mglaman/phpstan-drupal": "^1.2 || ^2",
         "phpstan/phpstan": "^1.10 || ^2",
         "phpstan/phpstan-deprecation-rules": "^1.1 || ^2",
@@ -37,7 +44,12 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "composer/installers": false,
+            "cweagans/composer-patches": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-scaffold": false,
+            "drupal/core-vendor-hardening": false,
+            "phpstan/extension-installer": true
         }
     },
     "scripts": {

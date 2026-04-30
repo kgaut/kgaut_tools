@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
+        run: composer update --no-interaction --prefer-dist --no-progress --with-all-dependencies
 
       - name: Drupal Coding Standards (PHPCS)
         run: ./vendor/bin/phpcs --standard=phpcs.xml.dist
