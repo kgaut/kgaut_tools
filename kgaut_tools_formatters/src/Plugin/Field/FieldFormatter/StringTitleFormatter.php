@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools_formatters\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -19,7 +19,12 @@ use Drupal\Core\Form\FormStateInterface;
  *   }
  * )
  */
-class StringTitleFormatter extends StringFormatter {
+final class StringTitleFormatter extends StringFormatter {
+
+  /**
+   * Allowed heading tags.
+   */
+  private const ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
   /**
    * {@inheritdoc}
@@ -34,21 +39,13 @@ class StringTitleFormatter extends StringFormatter {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-
+    $elements = parent::settingsForm($form, $form_state);
     $elements['tag'] = [
       '#type' => 'select',
       '#title' => $this->t('Title tag'),
-      '#options' => [
-        'h1' => 'H1',
-        'h2' => 'H2',
-        'h3' => 'H3',
-        'h4' => 'H4',
-        'h5' => 'H5',
-        'h6' => 'H6',
-      ],
-      '#default_value' => $this->getSetting('foo'),
+      '#options' => array_combine(self::ALLOWED_TAGS, array_map('strtoupper', self::ALLOWED_TAGS)),
+      '#default_value' => $this->getSetting('tag'),
     ];
-
     return $elements;
   }
 
@@ -61,12 +58,23 @@ class StringTitleFormatter extends StringFormatter {
     return $summary;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function viewValue(FieldItemInterface $item) {
     $tag = $this->getSetting('tag');
+    if (!in_array($tag, self::ALLOWED_TAGS, TRUE)) {
+      $tag = 'h1';
+    }
+
     return [
       '#type' => 'inline_template',
-      '#template' => '<' .$tag . '>' . '{{ value|nl2br }}' . '</' .$tag . '>',
-      '#context' => ['value' => $item->value],
+      '#template' => '<{{ tag }}>{{ value|nl2br }}</{{ tag }}>',
+      '#context' => [
+        'tag' => $tag,
+        'value' => $item->getValue()['value'] ?? '',
+      ],
     ];
   }
+
 }

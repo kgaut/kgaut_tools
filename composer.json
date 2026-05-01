@@ -1,28 +1,61 @@
 {
-  "name": "kgaut/kgaut_tools",
-  "type": "drupal-module",
-  "description": "Tools and services for drupal 8",
-  "authors": [
-    {
-      "name": "Kevin Gautreau",
-      "email": "contact@kgaut.net",
-      "homepage": "https://kgaut.net",
-      "role": "Maintainer"
-    }
-  ],
-  "keywords": ["Drupal"],
-  "license": "GPL-2.0+",
-  "homepage": "https://github.com/kgaut/kgaut_tools",
-  "minimum-stability": "dev",
-  "support": {
-    "issues": "https://github.com/kgaut/kgaut_tools/issues",
-    "source": "https://github.com/kgaut/kgaut_tools/"
-  },
-  "require": {
-      "drupal/pathauto": "*"
-  },
+    "name": "kgaut/kgaut_tools",
+    "type": "drupal-module",
+    "description": "Tools and services for Drupal.",
+    "authors": [
+        {
+            "name": "Kevin Gautreau",
+            "email": "contact@kgaut.net",
+            "homepage": "https://kgaut.net",
+            "role": "Maintainer"
+        }
+    ],
+    "keywords": ["Drupal"],
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://github.com/kgaut/kgaut_tools",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "support": {
+        "issues": "https://github.com/kgaut/kgaut_tools/issues",
+        "source": "https://github.com/kgaut/kgaut_tools/"
+    },
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "drupal/pathauto": "^1.12"
+    },
+    "require-dev": {
+        "drupal/coder": "^8.3 || ^9",
+        "drupal/core": "^10.3 || ^11",
+        "mglaman/phpstan-drupal": "^1.2 || ^2",
+        "phpstan/phpstan": "^1.10 || ^2",
+        "phpstan/phpstan-deprecation-rules": "^1.1 || ^2",
+        "phpunit/phpunit": "^9.6 || ^10"
+    },
     "suggest": {
         "drupal/block_field": "*",
         "drupal/paragraphs": "*"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": false,
+            "cweagans/composer-patches": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-scaffold": false,
+            "drupal/core-vendor-hardening": false,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=phpcs.xml.dist",
+        "phpcbf": "phpcbf --standard=phpcs.xml.dist",
+        "phpstan": "phpstan analyse --configuration=phpstan.neon.dist --memory-limit=512M",
+        "test": "phpunit -c phpunit.xml.dist"
     }
 }

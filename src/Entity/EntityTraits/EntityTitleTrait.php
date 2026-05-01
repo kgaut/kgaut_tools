@@ -1,22 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools\Entity\EntityTraits;
 
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\user\UserInterface;
 
+/**
+ * Provides helpers for entities holding a "title" string field.
+ */
 trait EntityTitleTrait {
 
-  public function getTitle() {
-    return $this->get('title')->value;
+  /**
+   * Returns the entity title.
+   */
+  public function getTitle(): string {
+    return (string) $this->get('title')->value;
   }
 
-  public function setTitle($title) {
+  /**
+   * Sets the entity title.
+   *
+   * @return $this
+   */
+  public function setTitle(string $title): static {
     $this->set('title', $title);
     return $this;
   }
 
-  public static function baseFieldTitle($title = 'Title', $maxLength = 255) {
+  /**
+   * Builds a base field definition for the "title" column.
+   */
+  public static function baseFieldTitle(string $title = 'Title', int $maxLength = 255): BaseFieldDefinition {
     return BaseFieldDefinition::create('string')
       ->setLabel($title)
       ->setRequired(TRUE)

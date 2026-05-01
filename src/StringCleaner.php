@@ -1,43 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\kgaut_tools;
+
 use Drupal\Core\Transliteration\PhpTransliteration;
-use Drupal\pathauto\AliasCleaner;
+use Drupal\pathauto\AliasCleanerInterface;
 
 /**
- * Class StringCleaner.
- *
- * @package Drupal\kgaut_tools
+ * Default implementation of StringCleanerInterface.
  */
-class StringCleaner implements StringCleanerInterface {
+final class StringCleaner implements StringCleanerInterface {
+
+  public function __construct(
+    private readonly PhpTransliteration $transliteration,
+    private readonly AliasCleanerInterface $pathautoAliasCleaner,
+  ) {}
 
   /**
-   * Drupal\Core\Transliteration\PhpTransliteration definition.
-   *
-   * @var \Drupal\Core\Transliteration\PhpTransliteration
+   * {@inheritdoc}
    */
-  protected $transliteration;
-  /**
-   * Drupal\pathauto\AliasCleaner definition.
-   *
-   * @var \Drupal\pathauto\AliasCleaner
-   */
-  protected $pathautoAliasCleaner;
-  /**
-   * Constructor.
-   */
-  public function __construct(PhpTransliteration $transliteration, AliasCleaner $pathauto_alias_cleaner) {
-    $this->transliteration = $transliteration;
-    $this->pathautoAliasCleaner = $pathauto_alias_cleaner;
-  }
-
-  public function clean($string, $no_dash = FALSE) {
-    $string = $this->transliteration->transliterate($string);
-    $string = $this->pathautoAliasCleaner->cleanString($string);
+  public function clean(string $string, bool $no_dash = FALSE): string {
+    $cleaned = $this->transliteration->transliterate($string);
+    $cleaned = $this->pathautoAliasCleaner->cleanString($cleaned);
     if ($no_dash) {
-      $string = str_replace('-', '_', $string);
+      $cleaned = str_replace('-', '_', $cleaned);
     }
-    return $string;
+    return $cleaned;
   }
 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="kgaut_tools">
+    <description>PHPCS configuration for the kgaut_tools module (Drupal coding standards).</description>
+
+    <arg name="extensions" value="php,module,install,inc,test,profile,theme"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <file>.</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>*/config/*</exclude-pattern>
+    <exclude-pattern>*/templates/*</exclude-pattern>
+    <!-- PHPStan stubs intentionally diverge from Drupal coding standards. -->
+    <exclude-pattern>tests/stubs/*</exclude-pattern>
+
+    <rule ref="Drupal"/>
+    <rule ref="DrupalPractice"/>
+</ruleset>

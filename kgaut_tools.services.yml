@@ -1,12 +1,26 @@
 services:
-  kgaut_tools.stringcleaner:
-    class: Drupal\kgaut_tools\StringCleaner
-    arguments: ['@transliteration', '@pathauto.alias_cleaner']
+  _defaults:
+    autowire: true
+    autoconfigure: true
 
   logger.channel.kgaut_tools:
     parent: logger.channel_base
     arguments: ['kgaut_tools']
 
+  Drupal\kgaut_tools\StringCleaner: ~
+  Drupal\kgaut_tools\TranslationImporter: ~
+
+  # Backwards-compatible aliases for code still using the legacy service IDs.
+  kgaut_tools.stringcleaner:
+    alias: Drupal\kgaut_tools\StringCleaner
+    public: true
   kgaut_tools.translation_importer:
-    class: Drupal\kgaut_tools\TranslationImporter
-    arguments: ['@locale.storage', '@language_manager']
+    alias: Drupal\kgaut_tools\TranslationImporter
+    public: true
+
+  # Hook classes (autodiscovered by core, registered here so DI works).
+  Drupal\kgaut_tools\Hook\HelpHooks: ~
+  Drupal\kgaut_tools\Hook\EntityHooks: ~
+  Drupal\kgaut_tools\Hook\FormHooks: ~
+  Drupal\kgaut_tools\Hook\ThemeHooks: ~
+  Drupal\kgaut_tools\Hook\UserHooks: ~
