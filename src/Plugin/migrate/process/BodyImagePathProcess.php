@@ -101,6 +101,7 @@ final class BodyImagePathProcess extends ProcessPluginBase implements ContainerF
    * Extracts the unique list of URLs to rewrite for the given attribute.
    *
    * @return string[]
+   *   The list of URLs found in the HTML for the given attribute.
    */
   private function extractAssets(string $html, string $attribute): array {
     $found = [];

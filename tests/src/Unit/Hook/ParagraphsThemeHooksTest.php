@@ -35,7 +35,10 @@ final class ParagraphsThemeHooksTest extends TestCase {
   }
 
   /**
+   * Data provider for ::testDoubleBundleAddsSuggestion().
+   *
    * @return array<string, array{0: string, 1: bool}>
+   *   Each row contains the paragraph bundle name and the expected outcome.
    */
   public static function doubleBundleProvider(): array {
     return [

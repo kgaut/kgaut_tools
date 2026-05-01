@@ -123,6 +123,7 @@ abstract class MyObject {
    * Loads every row of the backing table as instances of this class.
    *
    * @return static[]
+   *   The loaded objects.
    */
   public static function loadAll(): array {
     $items = [];
@@ -231,7 +232,10 @@ abstract class MyObject {
    *   When TRUE, results are always returned as an array.
    *
    * @return static|static[]
+   *   A single object when only one hit is found and $asArray is FALSE,
+   *   otherwise the list of matching objects.
    */
+  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Kept for backwards compatibility.
   protected static function _load(array $conditions = [], bool $asArray = FALSE): static|array {
     $objects = [];
     $query = \Drupal::database()->select(static::$dbTableName, 't');

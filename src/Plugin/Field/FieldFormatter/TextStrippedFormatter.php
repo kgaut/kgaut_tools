@@ -8,7 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\text\Plugin\Field\FieldFormatter\TextTrimmedFormatter;
 
 /**
- * Plugin implementation of the 'text_summary_or_trimmed_then_stripped' formatter.
+ * Plugin implementation of the strip-tags variant of the trimmed formatter.
  *
  * @FieldFormatter(
  *   id = "text_summary_or_trimmed_then_stripped",

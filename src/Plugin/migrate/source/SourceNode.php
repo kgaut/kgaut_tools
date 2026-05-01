@@ -118,7 +118,10 @@ abstract class SourceNode extends SqlBase {
   /**
    * Applies an associative array of field values to the paragraph.
    *
+   * @param \Drupal\paragraphs\ParagraphInterface $paragraph
+   *   The paragraph being updated.
    * @param array<string, mixed> $fields
+   *   The values to set on the paragraph, keyed by field name.
    */
   private function applyValues(ParagraphInterface $paragraph, array $fields): void {
     foreach ($fields as $key => $value) {

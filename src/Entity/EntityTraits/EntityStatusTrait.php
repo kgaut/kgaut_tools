@@ -59,6 +59,7 @@ trait EntityStatusTrait {
    */
   public static function baseFieldStatus(string $title = 'Published', ?string $description = NULL): BaseFieldDefinition {
     $field = BaseFieldDefinition::create('boolean')
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString -- The label is provided by callers.
       ->setLabel(t($title))
       ->setDefaultValue(TRUE)
       ->setDisplayConfigurable('form', TRUE)
