@@ -7,6 +7,10 @@ parameters:
         - node_modules/*
         - */config/*
         - */templates/*
+        - tests/stubs/*
+    bootstrapFiles:
+        - tests/stubs/paragraphs.stub.php
+        - tests/stubs/pathauto.stub.php
     ignoreErrors:
         # MyObject is an intentionally legacy active-record class kept for
         # backwards compatibility; it cannot be migrated to dependency

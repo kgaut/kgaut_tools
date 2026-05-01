@@ -15,6 +15,16 @@ use PHPUnit\Framework\TestCase;
 final class StringCleanerTest extends TestCase {
 
   /**
+   * Skips the suite when the pathauto contrib module is not installed.
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    if (!interface_exists(AliasCleanerInterface::class)) {
+      $this->markTestSkipped('Skipping: drupal/pathauto is not installed.');
+    }
+  }
+
+  /**
    * @covers ::clean
    */
   public function testCleanReturnsAliasFriendlyValue(): void {

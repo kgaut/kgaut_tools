@@ -14,6 +14,16 @@ use PHPUnit\Framework\TestCase;
 final class ParagraphsThemeHooksTest extends TestCase {
 
   /**
+   * Skips the suite when the paragraphs contrib module is not installed.
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    if (!interface_exists(ParagraphInterface::class)) {
+      $this->markTestSkipped('Skipping: drupal/paragraphs is not installed.');
+    }
+  }
+
+  /**
    * @covers ::themeSuggestionsParagraphAlter
    *
    * @dataProvider doubleBundleProvider

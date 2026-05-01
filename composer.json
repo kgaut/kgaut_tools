@@ -32,7 +32,6 @@
     "require-dev": {
         "drupal/coder": "^8.3 || ^9",
         "drupal/core": "^10.3 || ^11",
-        "drupal/paragraphs": "^1.18",
         "mglaman/phpstan-drupal": "^1.2 || ^2",
         "phpstan/phpstan": "^1.10 || ^2",
         "phpstan/phpstan-deprecation-rules": "^1.1 || ^2",

@@ -27,6 +27,10 @@ jobs:
           php-version: ${{ matrix.php-version }}
           tools: composer:v2
           coverage: none
+          ini-values: memory_limit=512M
+
+      - name: Validate composer.json
+        run: composer validate --no-check-publish --strict
 
       - name: Get composer cache directory
         id: composer-cache
@@ -44,10 +48,13 @@ jobs:
         run: composer update --no-interaction --prefer-dist --no-progress --with-all-dependencies
 
       - name: Drupal Coding Standards (PHPCS)
+        if: always()
         run: ./vendor/bin/phpcs --standard=phpcs.xml.dist
 
       - name: Static analysis (PHPStan)
+        if: always()
         run: ./vendor/bin/phpstan analyse --configuration=phpstan.neon.dist --no-progress --memory-limit=512M
 
       - name: Unit tests (PHPUnit)
+        if: always()
         run: ./vendor/bin/phpunit -c phpunit.xml.dist

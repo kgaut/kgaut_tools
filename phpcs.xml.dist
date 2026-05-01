@@ -12,6 +12,8 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>*/config/*</exclude-pattern>
     <exclude-pattern>*/templates/*</exclude-pattern>
+    <!-- PHPStan stubs intentionally diverge from Drupal coding standards. -->
+    <exclude-pattern>tests/stubs/*</exclude-pattern>
 
     <rule ref="Drupal"/>
     <rule ref="DrupalPractice"/>
