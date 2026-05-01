@@ -11,7 +11,7 @@
         }
     ],
     "keywords": ["Drupal"],
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "homepage": "https://github.com/kgaut/kgaut_tools",
     "minimum-stability": "dev",
     "prefer-stable": true,
