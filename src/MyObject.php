@@ -7,6 +7,8 @@ namespace Drupal\kgaut_tools;
 /**
  * Lightweight active-record style base class for ad-hoc database tables.
  *
+ * @phpstan-consistent-constructor
+ *
  * @internal
  *   Kept for backwards compatibility with legacy projects. New code should
  *   use proper entity types or a dedicated repository.
@@ -53,25 +55,25 @@ abstract class MyObject {
       $this->{$identifier} = $dataObject->{$identifier};
       $this->load();
       if (count((array) $dataObject) > 1) {
-        foreach ($this as $key => &$value) {
-          if (isset($dataObject->{$key}) && $dataObject->{$key} !== $value) {
-            $value = $dataObject->{$key};
+        foreach (array_keys(get_object_vars($this)) as $key) {
+          if (isset($dataObject->{$key}) && $dataObject->{$key} !== $this->{$key}) {
+            $this->{$key} = $dataObject->{$key};
           }
         }
       }
       return;
     }
 
-    foreach ($this as $key => &$value) {
+    foreach (array_keys(get_object_vars($this)) as $key) {
       if (is_object($dataObject) && isset($dataObject->{$key})) {
-        $value = $dataObject->{$key};
+        $this->{$key} = $dataObject->{$key};
         continue;
       }
       if (isset(static::$defaultData[$key])) {
-        $value = static::$defaultData[$key];
+        $this->{$key} = static::$defaultData[$key];
         continue;
       }
-      $value = $this->resolveSystemDefault((string) $key);
+      $this->{$key} = $this->resolveSystemDefault((string) $key);
     }
   }
 
@@ -89,7 +91,7 @@ abstract class MyObject {
   /**
    * Saves the object, performing an INSERT or UPDATE as appropriate.
    */
-  public function save() {
+  public function save(): bool|int {
     $unsaved_attributes = [];
     $this->presave($unsaved_attributes);
 
@@ -105,7 +107,7 @@ abstract class MyObject {
   /**
    * Returns the primary-key value.
    */
-  public function getId() {
+  public function getId(): mixed {
     return $this->{static::$dbTableIdentifier};
   }
 
@@ -113,7 +115,7 @@ abstract class MyObject {
    * Deletes the row associated with this object.
    */
   public function delete(): int {
-    return \Drupal::database()
+    return (int) \Drupal::database()
       ->delete(static::$dbTableName)
       ->condition(static::$dbTableIdentifier, $this->{static::$dbTableIdentifier})
       ->execute();
@@ -144,9 +146,9 @@ abstract class MyObject {
    *   Filled with the stripped attributes so they can be restored later.
    */
   protected function presave(array &$unsaved_attributes): void {
-    foreach ($this as $attr => $val) {
+    foreach (get_object_vars($this) as $attr => $val) {
       if (str_starts_with((string) $attr, '_')) {
-        $unsaved_attributes[$attr] = $val;
+        $unsaved_attributes[(string) $attr] = $val;
         unset($this->{$attr});
       }
     }
@@ -210,12 +212,12 @@ abstract class MyObject {
       return FALSE;
     }
 
-    foreach ($this as $key => &$value) {
+    foreach (array_keys(get_object_vars($this)) as $key) {
       if (!isset($result->{$key})) {
         continue;
       }
       $raw = $result->{$key};
-      $value = (in_array($key, ['data', 'stage'], TRUE) && is_string($raw) && $raw !== '')
+      $this->{$key} = (in_array($key, ['data', 'stage'], TRUE) && is_string($raw) && $raw !== '')
         ? json_decode($raw)
         : $raw;
     }
@@ -247,9 +249,9 @@ abstract class MyObject {
     $result = $query->execute();
     while ($row = $result->fetchObject()) {
       $instance = new static([]);
-      foreach ($instance as $key => &$value) {
+      foreach (array_keys(get_object_vars($instance)) as $key) {
         if (isset($row->{$key})) {
-          $value = $row->{$key};
+          $instance->{$key} = $row->{$key};
         }
       }
       $objects[] = $instance;

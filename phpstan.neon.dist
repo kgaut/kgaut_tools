@@ -7,6 +7,18 @@ parameters:
         - node_modules/*
         - */config/*
         - */templates/*
+    ignoreErrors:
+        # MyObject is an intentionally legacy active-record class kept for
+        # backwards compatibility; it cannot be migrated to dependency
+        # injection without a breaking change for downstream projects.
+        -
+            identifier: globalDrupalDependencyInjection.useDependencyInjection
+            path: src/MyObject.php
+        # Traits are reusable building blocks consumed by external entity
+        # types - they are unused inside this module by design.
+        -
+            identifier: trait.unused
+            path: src/Entity/EntityTraits/*
     drupal:
         entityMapping: []
 includes:

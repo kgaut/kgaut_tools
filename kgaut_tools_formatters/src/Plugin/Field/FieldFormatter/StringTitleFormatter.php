@@ -72,7 +72,7 @@ final class StringTitleFormatter extends StringFormatter {
       '#template' => '<{{ tag }}>{{ value|nl2br }}</{{ tag }}>',
       '#context' => [
         'tag' => $tag,
-        'value' => $item->value,
+        'value' => $item->getValue()['value'] ?? '',
       ],
     ];
   }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\kgaut_tools\Plugin\migrate\process;
 
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -108,7 +109,7 @@ final class BodyImagePathProcess extends ProcessPluginBase implements ContainerF
 
     if ($attribute === 'src') {
       preg_match_all('/<img[^>]+>/i', $html, $tags);
-      foreach (($tags[0] ?? []) as $tag) {
+      foreach ($tags[0] as $tag) {
         if (preg_match('/src=("[^"]*"|\'[^\']*\')/i', $tag, $attr)) {
           $found[] = trim($attr[1], "\"'");
         }
@@ -116,7 +117,7 @@ final class BodyImagePathProcess extends ProcessPluginBase implements ContainerF
     }
     elseif ($attribute === 'href') {
       preg_match_all('/href=("[^"]+\.(?:png|jpg|jpeg|gif|svg)"|\'[^\']+\.(?:png|jpg|jpeg|gif|svg)\')/i', $html, $tags);
-      foreach (($tags[1] ?? []) as $value) {
+      foreach ($tags[1] as $value) {
         $found[] = trim($value, "\"'");
       }
     }
@@ -172,7 +173,7 @@ final class BodyImagePathProcess extends ProcessPluginBase implements ContainerF
     }
 
     try {
-      $this->fileRepository->writeData($contents, $destination, FileSystemInterface::EXISTS_REPLACE);
+      $this->fileRepository->writeData($contents, $destination, FileExists::Replace);
       return $public_uri;
     }
     catch (\Throwable $exception) {

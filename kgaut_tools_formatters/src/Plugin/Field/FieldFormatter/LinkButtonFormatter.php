@@ -86,9 +86,14 @@ final class LinkButtonFormatter extends UriLinkFormatter {
         continue;
       }
 
+      $uri = $item->getValue()['value'] ?? $item->getValue()['uri'] ?? '';
+      if ($uri === '') {
+        continue;
+      }
+
       $element = [
         '#type' => 'link',
-        '#url' => Url::fromUri($item->value),
+        '#url' => Url::fromUri($uri),
         '#title' => $settings['label'],
         '#attributes' => ['class' => $classes],
       ];

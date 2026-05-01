@@ -22,8 +22,10 @@ final class ParagraphsThemeHooks {
    */
   #[Hook('preprocess_paragraph')]
   public function preprocessParagraph(array &$variables): void {
-    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
-    $paragraph = $variables['elements']['#paragraph'];
+    $paragraph = $variables['elements']['#paragraph'] ?? NULL;
+    if (!$paragraph instanceof ParagraphInterface) {
+      return;
+    }
 
     $variables['type'] = $this->isDoubleBundle($paragraph) ? 'double' : 'simple';
 
@@ -49,9 +51,8 @@ final class ParagraphsThemeHooks {
    */
   #[Hook('theme_suggestions_paragraph_alter')]
   public function themeSuggestionsParagraphAlter(array &$suggestions, array $variables): void {
-    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
-    $paragraph = $variables['elements']['#paragraph'];
-    if ($this->isDoubleBundle($paragraph)) {
+    $paragraph = $variables['elements']['#paragraph'] ?? NULL;
+    if ($paragraph instanceof ParagraphInterface && $this->isDoubleBundle($paragraph)) {
       $suggestions[] = 'paragraph__double';
     }
   }

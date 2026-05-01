@@ -89,8 +89,7 @@ final class ThemeHooks {
    */
   #[Hook('theme_suggestions_node')]
   public function themeSuggestionsNode(array $variables): array {
-    /** @var \Drupal\node\NodeInterface $node */
-    $node = $variables['elements']['#node'];
+    $node = $variables['elements']['#node'] ?? NULL;
     if (!$node instanceof NodeInterface) {
       return [];
     }
@@ -111,8 +110,7 @@ final class ThemeHooks {
    */
   #[Hook('theme_suggestions_taxonomy_term')]
   public function themeSuggestionsTaxonomyTerm(array $variables): array {
-    /** @var \Drupal\taxonomy\TermInterface $term */
-    $term = $variables['elements']['#taxonomy_term'];
+    $term = $variables['elements']['#taxonomy_term'] ?? NULL;
     if (!$term instanceof TermInterface) {
       return [];
     }
