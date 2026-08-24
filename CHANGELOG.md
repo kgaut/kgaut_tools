@@ -1,5 +1,8 @@
 # kgaut_tools 2.0.x-dev
 
+# kgaut_tools 2.0.24 24/08/2026
+ - feat(MyObject): loadItems() alias of _load()
+
 # kgaut_tools 2.0.23 05/09/2024
  - fix(info): missing dependencies
 

@@ -183,6 +183,19 @@ abstract class MyObject {
     }
   }
 
+  /**
+   * Alias of _load() without the underscore prefix, phpcs-friendly.
+   *
+   * Same contract; _load() is kept for existing subclasses.
+   *
+   * @param array $conditions
+   * @param bool|FALSE $asArray
+   * @return array|mixed
+   */
+  protected static function loadItems($conditions = array(), $asArray = FALSE) {
+    return static::_load($conditions, $asArray);
+  }
+
   public static function loadAll() {
     $steps = array();
     $query = \Drupal::database()->select(static::$dbTableName, 's');
